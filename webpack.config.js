@@ -41,6 +41,19 @@ const webBuilder = new ScratchWebpackConfigBuilder(common)
         Buffer: ['buffer', 'Buffer']
     }));
 
+    // extension-worker.js のエントリーポイントを追加
+webBuilder.merge({
+    entry: {
+        'extension-worker': './src/extension-support/extension-worker.js',
+        // 既存のエントリーポイントもここに含まれる
+    },
+    output: {
+        filename: '[name].js',
+        path: path.resolve(__dirname, 'dist'),
+        publicPath: '/dist/'
+    }
+});
+
 const playgroundBuilder = webBuilder.clone()
     .merge({
         devServer: {
