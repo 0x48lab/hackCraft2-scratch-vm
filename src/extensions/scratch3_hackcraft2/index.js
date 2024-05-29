@@ -11,12 +11,19 @@ const {translation, localse} = require('./language');
 // 👇先程作成したアイコン画像
 const menuIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDEuNjgzMzciIGhlaWdodD0iMTAxLjY4MzM3IiB2aWV3Qm94PSIwLDAsMTAxLjY4MzM3LDEwMS42ODMzNyI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4OS4xNTgzMSwtMTI5LjE1ODMxKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTg5LjQwODMxLDE4MGMwLC0yNy45NDEwMiAyMi42NTA2NywtNTAuNTkxNjkgNTAuNTkxNjksLTUwLjU5MTY5YzI3Ljk0MTAyLDAgNTAuNTkxNjksMjIuNjUwNjcgNTAuNTkxNjksNTAuNTkxNjljMCwyNy45NDEwMiAtMjIuNjUwNjcsNTAuNTkxNjkgLTUwLjU5MTY5LDUwLjU5MTY5Yy0yNy45NDEwMiwwIC01MC41OTE2OSwtMjIuNjUwNjcgLTUwLjU5MTY5LC01MC41OTE2OXoiIGZpbGw9IiM2NWM3NTAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48ZyBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTIyNS4xODUsMTY1LjA0di04Ljc3aDI5Ljh2OC43N3oiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjIxLjM4NSwxNzAuNjF2LTkuOTVoMzcuNHY5Ljk1eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMTcuNTQ1LDIwMC4zNXYtMzQuMTZoNDUuMDh2MzQuMTZ6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMi4xMDUsMjAyLjJ2LTI5LjczaDM1Ljk3djI5LjczeiIgZmlsbD0iI2Q2NmU0ZSIvPjxwYXRoIGQ9Ik0yMDEuNjA1LDIwMy43M3YtMTcuNDhoMTcuNDh2MTcuNDh6IiBmaWxsPSIjZDg2NjRhIi8+PHBhdGggZD0iTTI2MS4wNzUsMjAzLjY1di0xNy4zM2gxNy4zM3YxNy4zM3oiIGZpbGw9IiNkODY2NGEiLz48L2c+PGc+PHBhdGggZD0iTTI1Mi40NjUsMTg2LjMydjEwLjE1aC03LjE5di0xMC4xNXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI1Mi40NjUsMTg4LjIydjguMjVoLTkuMzV2LTguMjV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4My4yN3Y0Ljk1aC05LjM1di00Ljk1eiIgZmlsbD0iIzk0Yzk2OSIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjQzLjk3NSwxOTUuODJ2LTYuOTZoNC45NXY2Ljk2eiIgZmlsbD0iIzIzMTgxNSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjQ4LjI3NSwxODkuNDZoLTMuNjZ2NS42OGgzLjY2di01LjY0TTI0OS41NjUsMTg4LjE4djguMjVoLTYuMjN2LTguMjVoNi4yMnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzNy4wNjUsMTg4LjIydjguMjVoLTkuMzV2LTguMjV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4My4yN3Y0Ljk1aC05LjM1di00Ljk1eiIgZmlsbD0iIzk0Yzk2OSIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjI4LjU3NSwxOTUuODJ2LTYuOTZoNC45NXY2Ljk2eiIgZmlsbD0iIzIzMTgxNSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjMyLjg3NSwxODkuNDZoLTMuNjZ2NS42OGgzLjY3di01LjY0TTIzNC4xNjUsMTg4LjE4djguMjVoLTYuMjN2LTguMjVoNi4yMnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvZz48L2c+PC9zdmc+';
 const blockRedIconURI = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3OC43OSA0OS40NiI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTR7ZmlsbDojZmZmO30uY2xzLTEsLmNscy0yLC5jbHMtM3tzdHJva2U6IzAwMDtzdHJva2Utd2lkdGg6MnB4O30uY2xzLTEsLmNscy0yLC5jbHMtMywuY2xzLTQsLmNscy01e3N0cm9rZS1taXRlcmxpbWl0OjEwO30uY2xzLTJ7ZmlsbDojZDY2ZTRlO30uY2xzLTN7ZmlsbDojZDg2NjRhO30uY2xzLTQsLmNscy01e3N0cm9rZTojMjMxODE1O3N0cm9rZS13aWR0aDoxLjI4cHg7fS5jbHMtNXtmaWxsOiM5NGM5Njk7fS5jbHMtNntmaWxsOiMyMzE4MTU7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT44eDlDcmFmdF9oYWtrdW5fY29sb3I8L3RpdGxlPjxnIGlkPSLjg6zjgqTjg6Tjg7xfMSIgZGF0YS1uYW1lPSLjg6zjgqTjg6Tjg7wgMSI+PHJlY3QgY2xhc3M9ImNscy0xIiB4PSIyNC41OCIgeT0iMSIgd2lkdGg9IjI5LjgiIGhlaWdodD0iOC43NyIvPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMjAuNzgiIHk9IjUuMzkiIHdpZHRoPSIzNy40IiBoZWlnaHQ9IjkuOTUiLz48cmVjdCBjbGFzcz0iY2xzLTEiIHg9IjE2Ljk0IiB5PSIxMC45MiIgd2lkdGg9IjQ1LjA4IiBoZWlnaHQ9IjM0LjE2Ii8+PHJlY3QgY2xhc3M9ImNscy0yIiB4PSIyMS41IiB5PSIxNy4yIiB3aWR0aD0iMzUuOTciIGhlaWdodD0iMjkuNzMiLz48cmVjdCBjbGFzcz0iY2xzLTMiIHg9IjEiIHk9IjMwLjk4IiB3aWR0aD0iMTcuNDgiIGhlaWdodD0iMTcuNDgiLz48cmVjdCBjbGFzcz0iY2xzLTMiIHg9IjYwLjQ3IiB5PSIzMS4wNSIgd2lkdGg9IjE3LjMzIiBoZWlnaHQ9IjE3LjMzIi8+PC9nPjxnIGlkPSLjg6zjgqTjg6Tjg7xfMyIgZGF0YS1uYW1lPSLjg6zjgqTjg6Tjg7wgMyI+PHJlY3QgY2xhc3M9ImNscy00IiB4PSI5OS40NyIgeT0iMjAxLjE4IiB3aWR0aD0iNy4xOSIgaGVpZ2h0PSIxMC4xNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLjMzIDI0Mi4zOCkgcm90YXRlKDE4MCkiLz48cmVjdCBjbGFzcz0iY2xzLTQiIHg9Ijk3LjMxIiB5PSIyMDMuMDgiIHdpZHRoPSI5LjM1IiBoZWlnaHQ9IjguMjUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OS4xNyAyNDQuMjgpIHJvdGF0ZSgxODApIi8+PHJlY3QgY2xhc3M9ImNscy01IiB4PSI5Ny4zMSIgeT0iMTk4LjEzIiB3aWR0aD0iOS4zNSIgaGVpZ2h0PSI0Ljk1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDkuMTcgMjMxLjA4KSByb3RhdGUoMTgwKSIvPjxyZWN0IGNsYXNzPSJjbHMtNiIgeD0iNDMuMzciIHk9IjMzLjU5IiB3aWR0aD0iNC45NSIgaGVpZ2h0PSI2Ljk2Ii8+PHBhdGggY2xhc3M9ImNscy02IiBkPSJNMTAyLjQ4LDIwNC4zNlYyMTBIOTguODJ2LTUuNjhoMy42Nm0xLjI4LTEuMjhIOTcuNTR2OC4yNWg2LjIzdi04LjI1WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTU0LjgxIC0xNzAuMTMpIi8+PHJlY3QgY2xhc3M9ImNscy00IiB4PSI4MS45MiIgeT0iMjAzLjA4IiB3aWR0aD0iOS4zNSIgaGVpZ2h0PSI4LjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMTguMzggMjQ0LjI4KSByb3RhdGUoMTgwKSIvPjxyZWN0IGNsYXNzPSJjbHMtNSIgeD0iODEuOTIiIHk9IjE5OC4xMyIgd2lkdGg9IjkuMzUiIGhlaWdodD0iNC45NSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTE4LjM4IDIzMS4wOCkgcm90YXRlKDE4MCkiLz48cmVjdCBjbGFzcz0iY2xzLTYiIHg9IjI3Ljk3IiB5PSIzMy41OSIgd2lkdGg9IjQuOTUiIGhlaWdodD0iNi45NiIvPjxwYXRoIGNsYXNzPSJjbHMtNiIgZD0iTTg3LjA5LDIwNC4zNlYyMTBIODMuNDJ2LTUuNjhoMy42Nm0xLjI4LTEuMjhIODIuMTR2OC4yNWg2LjIzdi04LjI1WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTU0LjgxIC0xNzAuMTMpIi8+PC9nPjwvc3ZnPg==';
-const blockBlueIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3OC44IiBoZWlnaHQ9IjQ5LjQ2IiB2aWV3Qm94PSIwLDAsNzguOCw0OS40NiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMC42MDUsLTE1NS4yNykiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMjUuMTg1LDE2NS4wNHYtOC43N2gyOS44djguNzd6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMS4zODUsMTcwLjYxdi05Ljk1aDM3LjR2OS45NXoiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjE3LjU0NSwyMDAuMzV2LTM0LjE2aDQ1LjA4djM0LjE2eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMjIuMTA1LDIwMi4ydi0yOS43M2gzNS45N3YyOS43M3oiIGZpbGw9IiM2NmEzZmYiLz48cGF0aCBkPSJNMjAxLjYwNSwyMDMuNzN2LTE3LjQ4aDE3LjQ4djE3LjQ4eiIgZmlsbD0iIzY2YTNmZiIvPjxwYXRoIGQ9Ik0yNjEuMDc1LDIwMy42NXYtMTcuMzNoMTcuMzN2MTcuMzN6IiBmaWxsPSIjNjZhM2ZmIi8+PC9nPjxnPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4Ni4zMnYxMC4xNWgtNy4xOXYtMTAuMTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjUyLjQ2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI0My45NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0OC4yNzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42NnYtNS42NE0yNDkuNTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjM3LjA2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTIyOC41NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMi44NzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42N3YtNS42NE0yMzQuMTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9nPjwvc3ZnPg==';
-const blockCyanIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3OC44IiBoZWlnaHQ9IjQ5LjQ2IiB2aWV3Qm94PSIwLDAsNzguOCw0OS40NiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMC42MDUsLTE1NS4yNykiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMjUuMTg1LDE2NS4wNHYtOC43N2gyOS44djguNzd6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMS4zODUsMTcwLjYxdi05Ljk1aDM3LjR2OS45NXoiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjE3LjU0NSwyMDAuMzV2LTM0LjE2aDQ1LjA4djM0LjE2eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMjIuMTA1LDIwMi4ydi0yOS43M2gzNS45N3YyOS43M3oiIGZpbGw9IiM3M2ZmZmEiLz48cGF0aCBkPSJNMjAxLjYwNSwyMDMuNzN2LTE3LjQ4aDE3LjQ4djE3LjQ4eiIgZmlsbD0iIzczZmZmYSIvPjxwYXRoIGQ9Ik0yNjEuMDc1LDIwMy42NXYtMTcuMzNoMTcuMzN2MTcuMzN6IiBmaWxsPSIjNzNmZmZhIi8+PC9nPjxnPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4Ni4zMnYxMC4xNWgtNy4xOXYtMTAuMTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjUyLjQ2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI0My45NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0OC4yNzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42NnYtNS42NE0yNDkuNTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjM3LjA2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTIyOC41NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMi44NzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42N3YtNS42NE0yMzQuMTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9nPjwvc3ZnPg==';
-const blockOrangeIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3OC44IiBoZWlnaHQ9IjQ5LjQ2IiB2aWV3Qm94PSIwLDAsNzguOCw0OS40NiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMC42MDUsLTE1NS4yNykiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMjUuMTg1LDE2NS4wNHYtOC43N2gyOS44djguNzd6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMS4zODUsMTcwLjYxdi05Ljk1aDM3LjR2OS45NXoiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjE3LjU0NSwyMDAuMzV2LTM0LjE2aDQ1LjA4djM0LjE2eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMjIuMTA1LDIwMi4ydi0yOS43M2gzNS45N3YyOS43M3oiIGZpbGw9IiNmZmM1OGIiLz48cGF0aCBkPSJNMjAxLjYwNSwyMDMuNzN2LTE3LjQ4aDE3LjQ4djE3LjQ4eiIgZmlsbD0iI2ZmYzU4YiIvPjxwYXRoIGQ9Ik0yNjEuMDc1LDIwMy42NXYtMTcuMzNoMTcuMzN2MTcuMzN6IiBmaWxsPSIjZmZjNThiIi8+PC9nPjxnPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4Ni4zMnYxMC4xNWgtNy4xOXYtMTAuMTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjUyLjQ2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI0My45NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0OC4yNzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42NnYtNS42NE0yNDkuNTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjM3LjA2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTIyOC41NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMi44NzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42N3YtNS42NE0yMzQuMTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9nPjwvc3ZnPg==';
-const blockYellowIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3OC44IiBoZWlnaHQ9IjQ5LjQ2IiB2aWV3Qm94PSIwLDAsNzguOCw0OS40NiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMC42MDUsLTE1NS4yNykiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMjUuMTg1LDE2NS4wNHYtOC43N2gyOS44djguNzd6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMS4zODUsMTcwLjYxdi05Ljk1aDM3LjR2OS45NXoiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjE3LjU0NSwyMDAuMzV2LTM0LjE2aDQ1LjA4djM0LjE2eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMjIuMTA1LDIwMi4ydi0yOS43M2gzNS45N3YyOS43M3oiIGZpbGw9IiNmZmVmNzMiLz48cGF0aCBkPSJNMjAxLjYwNSwyMDMuNzN2LTE3LjQ4aDE3LjQ4djE3LjQ4eiIgZmlsbD0iI2ZmZWY3MyIvPjxwYXRoIGQ9Ik0yNjEuMDc1LDIwMy42NXYtMTcuMzNoMTcuMzN2MTcuMzN6IiBmaWxsPSIjZmZlZjczIi8+PC9nPjxnPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4Ni4zMnYxMC4xNWgtNy4xOXYtMTAuMTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjUyLjQ2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI0My45NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0OC4yNzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42NnYtNS42NE0yNDkuNTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjM3LjA2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTIyOC41NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMi44NzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42N3YtNS42NE0yMzQuMTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9nPjwvc3ZnPg==';
-const blockLimeIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3OC44IiBoZWlnaHQ9IjQ5LjQ2IiB2aWV3Qm94PSIwLDAsNzguOCw0OS40NiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMC42MDUsLTE1NS4yNykiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMjUuMTg1LDE2NS4wNHYtOC43N2gyOS44djguNzd6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMS4zODUsMTcwLjYxdi05Ljk1aDM3LjR2OS45NXoiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjE3LjU0NSwyMDAuMzV2LTM0LjE2aDQ1LjA4djM0LjE2eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMjIuMTA1LDIwMi4ydi0yOS43M2gzNS45N3YyOS43M3oiIGZpbGw9IiM5NWZmNzMiLz48cGF0aCBkPSJNMjAxLjYwNSwyMDMuNzN2LTE3LjQ4aDE3LjQ4djE3LjQ4eiIgZmlsbD0iIzk1ZmY3MyIvPjxwYXRoIGQ9Ik0yNjEuMDc1LDIwMy42NXYtMTcuMzNoMTcuMzN2MTcuMzN6IiBmaWxsPSIjOTVmZjczIi8+PC9nPjxnPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4Ni4zMnYxMC4xNWgtNy4xOXYtMTAuMTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjUyLjQ2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI0My45NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0OC4yNzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42NnYtNS42NE0yNDkuNTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjM3LjA2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTIyOC41NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMi44NzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42N3YtNS42NE0yMzQuMTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9nPjwvc3ZnPg==';
-const blockPurpleIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI3OC44IiBoZWlnaHQ9IjQ5LjQ2IiB2aWV3Qm94PSIwLDAsNzguOCw0OS40NiI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTIwMC42MDUsLTE1NS4yNykiPjxnIGRhdGEtcGFwZXItZGF0YT0ieyZxdW90O2lzUGFpbnRpbmdMYXllciZxdW90Ozp0cnVlfSIgZmlsbC1ydWxlPSJub256ZXJvIiBzdHJva2UtbGluZWNhcD0iYnV0dCIgc3Ryb2tlLWxpbmVqb2luPSJtaXRlciIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2UtZGFzaGFycmF5PSIiIHN0cm9rZS1kYXNob2Zmc2V0PSIwIiBzdHlsZT0ibWl4LWJsZW5kLW1vZGU6IG5vcm1hbCI+PGcgc3Ryb2tlPSIjMDAwMDAwIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMjUuMTg1LDE2NS4wNHYtOC43N2gyOS44djguNzd6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMS4zODUsMTcwLjYxdi05Ljk1aDM3LjR2OS45NXoiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjE3LjU0NSwyMDAuMzV2LTM0LjE2aDQ1LjA4djM0LjE2eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMjIuMTA1LDIwMi4ydi0yOS43M2gzNS45N3YyOS43M3oiIGZpbGw9IiNjMzc0ZmYiLz48cGF0aCBkPSJNMjAxLjYwNSwyMDMuNzN2LTE3LjQ4aDE3LjQ4djE3LjQ4eiIgZmlsbD0iI2MzNzRmZiIvPjxwYXRoIGQ9Ik0yNjEuMDc1LDIwMy42NXYtMTcuMzNoMTcuMzN2MTcuMzN6IiBmaWxsPSIjYzM3NGZmIi8+PC9nPjxnPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4Ni4zMnYxMC4xNWgtNy4xOXYtMTAuMTV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjUyLjQ2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI0My45NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTI0OC4yNzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42NnYtNS42NE0yNDkuNTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4OC4yMnY4LjI1aC05LjM1di04LjI1eiIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjM3LjA2NSwxODMuMjd2NC45NWgtOS4zNXYtNC45NXoiIGZpbGw9IiM5NGM5NjkiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTIyOC41NzUsMTk1Ljgydi02Ljk2aDQuOTV2Ni45NnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzMi44NzUsMTg5LjQ2aC0zLjY2djUuNjhoMy42N3YtNS42NE0yMzQuMTY1LDE4OC4xOHY4LjI1aC02LjIzdi04LjI1aDYuMjJ6IiBmaWxsPSIjMjMxODE1IiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIvPjwvZz48L2c+PC9nPjwvc3ZnPg==';
+const svgNormal = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="78.82037" height="69.3397" viewBox="0,0,78.82037,69.3397"><g transform="translate(-200.58463,-135.3903)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill-rule="nonzero" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><g stroke="#000000" stroke-width="2"><path d="M225.185,165.04001v-8.77h29.8v8.77z" fill="#ffffff"/><path d="M221.385,170.61001v-9.95h37.4v9.95z" fill="#ffffff"/><path d="M217.545,200.35001v-34.16h45.08v34.16z" fill="#ffffff"/><path d="M222.105,202.20001v-29.73h35.97v29.73z" fill="#66a3ff"/><path d="M201.605,203.73001v-17.48h17.48v17.48z" fill="#66a3ff"/><path d="M261.075,203.65001v-17.33h17.33v17.33z" fill="#66a3ff"/></g><g><path d="M252.465,186.32001v10.15h-7.19v-10.15z" fill="#ffffff" stroke="#231815" stroke-width="1.28"/><path d="M252.465,188.22001v8.25h-9.35v-8.25z" fill="#ffffff" stroke="#231815" stroke-width="1.28"/><path d="M252.465,183.27001v4.95h-9.35v-4.95z" fill="#94c969" stroke="#231815" stroke-width="1.28"/><path d="M243.975,195.82001v-6.96h4.95v6.96z" fill="#231815" stroke="none" stroke-width="1"/><path d="M248.275,189.46001h-3.66v5.68h3.66v-5.64M249.565,188.18001v8.25h-6.23v-8.25h6.22z" fill="#231815" stroke="none" stroke-width="1"/><path d="M237.065,188.22001v8.25h-9.35v-8.25z" fill="#ffffff" stroke="#231815" stroke-width="1.28"/><path d="M237.065,183.27001v4.95h-9.35v-4.95z" fill="#94c969" stroke="#231815" stroke-width="1.28"/><path d="M228.575,195.82001v-6.96h4.95v6.96z" fill="#231815" stroke="none" stroke-width="1"/><path d="M232.875,189.46001h-3.66v5.68h3.67v-5.64M234.165,188.18001v8.25h-6.23v-8.25h6.22z" fill="#231815" stroke="none" stroke-width="1"/></g><path d="M226.64573,141.98055v0v0v0z" fill="#fff500" stroke="none" stroke-width="0"/><path d="M201.08463,180.36574v-38.91041h41.72061v38.91041z" fill="#ffffff" stroke="#000000" stroke-width="1"/><text transform="translate(208.78797,173.48683) scale(0.98275,0.75439)" font-size="40" xml:space="preserve" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="Pixel" font-weight="normal" text-anchor="start" style="mix-blend-mode: normal"><tspan x="0" dy="0">$number</tspan></text></g></g></svg>`;
+const svgAIOnly = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="78.82037" height="69.33988" viewBox="0,0,78.82037,69.33988"><g transform="translate(-200.58463,-135.39014)"><g data-paper-data="{&quot;isPaintingLayer&quot;:true}" fill-rule="nonzero" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" style="mix-blend-mode: normal"><g stroke="#000000" stroke-width="2"><path d="M225.185,165.04001v-8.77h29.8v8.77z" fill="#ffffff"/><path d="M221.385,170.61001v-9.95h37.4v9.95z" fill="#ffffff"/><path d="M217.545,200.35001v-34.16h45.08v34.16z" fill="#ffffff"/><path d="M222.105,202.20001v-29.73h35.97v29.73z" fill="#d66e4e"/><path d="M201.605,203.73001v-17.48h17.48v17.48z" fill="#d66e4e"/><path d="M261.075,203.65001v-17.33h17.33v17.33z" fill="#d66e4e"/></g><g><path d="M252.465,186.32001v10.15h-7.19v-10.15z" fill="#ffffff" stroke="#231815" stroke-width="1.28"/><path d="M252.465,188.22001v8.25h-9.35v-8.25z" fill="#ffffff" stroke="#231815" stroke-width="1.28"/><path d="M252.465,183.27001v4.95h-9.35v-4.95z" fill="#94c969" stroke="#231815" stroke-width="1.28"/><path d="M243.975,195.82001v-6.96h4.95v6.96z" fill="#231815" stroke="none" stroke-width="1"/><path d="M248.275,189.46001h-3.66v5.68h3.66v-5.64M249.565,188.18001v8.25h-6.23v-8.25h6.22z" fill="#231815" stroke="none" stroke-width="1"/><path d="M237.065,188.22001v8.25h-9.35v-8.25z" fill="#ffffff" stroke="#231815" stroke-width="1.28"/><path d="M237.065,183.27001v4.95h-9.35v-4.95z" fill="#94c969" stroke="#231815" stroke-width="1.28"/><path d="M228.575,195.82001v-6.96h4.95v6.96z" fill="#231815" stroke="none" stroke-width="1"/><path d="M232.875,189.46001h-3.66v5.68h3.67v-5.64M234.165,188.18001v8.25h-6.23v-8.25h6.22z" fill="#231815" stroke="none" stroke-width="1"/></g><path d="M226.64573,141.98055v0v0z" fill="#fff500" stroke="none" stroke-width="0"/><path d="M201.08463,180.36574v-38.91041h41.72061v38.91041z" fill="#ffffff" stroke="#000000" stroke-width="1"/><text transform="translate(208.78797,173.48683) scale(0.98275,0.75439)" font-size="40" xml:space="preserve" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="Pixel" font-weight="normal" text-anchor="start" style="mix-blend-mode: normal"><tspan x="0" dy="0">$number</tspan></text></g></g></svg>`;
+
+function getIconURI (level, type) {
+    // SVG文字列の<tspan>の内容を引数の数字に置き換える
+    const svgTemplate = type=="ai"?svgAIOnly:svgNormal;
+    const updatedSvg = svgTemplate.replace('$number', level);
+
+    // Base64にエンコードする
+    const base64Svg = btoa(updatedSvg);
+
+    return 'data:image/svg+xml;base64,'+base64Svg;    
+}
 
 class Scratch3hackCraft2 {
     
@@ -44,11 +51,11 @@ class Scratch3hackCraft2 {
         document.title = document.title+" {"+this.entity_name+"}";
 
         //test
-        this.display3D = false;
-        console.log('constructor');
-        this._waitForStageElement();
+        //this.display3D = false;
+        //console.log('constructor');
+        //this._waitForStageElement();
 
-        this._add3dViewToggleButton();
+        //this._add3dViewToggleButton();
     }
 
     _add3dViewToggleButton () {
@@ -129,7 +136,7 @@ class Scratch3hackCraft2 {
     getBlocks () {
         this.locale = this.setLocale();
         return [
-            {
+            /*{
                 opcode: 'setRenderView',
                 text: translation.render_view_text[this.locale],
                 level: 1,
@@ -142,11 +149,11 @@ class Scratch3hackCraft2 {
                         menu: 'FLAG_MENU_OPTIONS'
                     }
                 }
-            },
+            },*/
             {
                 opcode: 'onEntityCustomEvent',
                 blockType: BlockType.HAT,
-                blockIconURI: blockYellowIconURI,
+                blockIconURI: getIconURI(5, 'normal'),
                 text: translation.onEntityCustomEvent_text[this.locale],
                 level: 5,
                 arguments: {
@@ -159,7 +166,7 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'onInteractEvent',
                 blockType: BlockType.HAT,
-                blockIconURI: blockYellowIconURI,
+                blockIconURI: getIconURI(5, 'normal'),
                 text: translation.onInteractEvent_text[this.locale],
                 level: 5,
                 arguments: {
@@ -174,7 +181,7 @@ class Scratch3hackCraft2 {
                 text: translation.sendEvent_text[this.locale],
                 level: 5,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockYellowIconURI,
+                blockIconURI: getIconURI(5, 'normal'),
                 arguments: {
                     TARGET: {
                         type: ArgumentType.STRING,
@@ -190,25 +197,25 @@ class Scratch3hackCraft2 {
                 text: translation.waitForRedstone_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
             },{
                 opcode: 'waitForChat',
                 text: translation.waitForChat_text[this.locale],
                 level: 2,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockLimeIconURI,
+                blockIconURI: getIconURI(2, 'normal'),
             },{
                 opcode: 'waitForBreakBlock',
                 text: translation.waitForBreakBlock_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
             },{
                 opcode: 'grabItem',
                 text: translation.grabItem_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     SLOT: {
                         type: ArgumentType.NUMBER,
@@ -219,7 +226,7 @@ class Scratch3hackCraft2 {
                 text: translation.passItem_text[this.locale],
                 level: 2,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockLimeIconURI,
+                blockIconURI: getIconURI(2, 'normal'),
                 arguments: {
                     SLOT: {
                         type: ArgumentType.NUMBER,
@@ -235,7 +242,7 @@ class Scratch3hackCraft2 {
                 text: translation.setItem_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     SLOT: {
                         type: ArgumentType.NUMBER,
@@ -252,14 +259,14 @@ class Scratch3hackCraft2 {
                 text: translation.rollback_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
             },
             {
                 opcode: 'move',
                 text: translation.move_text[this.locale],
                 level: 0,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
+                blockIconURI: getIconURI(0, 'normal'),
                 arguments: {
                     MOVE_MENU: {
                         type: 'string',
@@ -272,7 +279,7 @@ class Scratch3hackCraft2 {
                 text: translation.turn_text[this.locale],
                 level: 0,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
+                blockIconURI: getIconURI(0, 'normal'),
                 arguments: {
                     TURN_MENU: {
                         type: 'string',
@@ -285,7 +292,7 @@ class Scratch3hackCraft2 {
                 text: translation.place_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -298,7 +305,7 @@ class Scratch3hackCraft2 {
                 text: translation.dig_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -311,7 +318,7 @@ class Scratch3hackCraft2 {
                 text: translation.useItem_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -324,7 +331,7 @@ class Scratch3hackCraft2 {
                 text: translation.action_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -337,7 +344,7 @@ class Scratch3hackCraft2 {
                 text: translation.putToChest_text[this.locale],
                 level: 9,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
+                blockIconURI: getIconURI(9, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -350,7 +357,7 @@ class Scratch3hackCraft2 {
                 text: translation.takeFromChest_text[this.locale],
                 level: 9,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
+                blockIconURI: getIconURI(9, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -363,13 +370,13 @@ class Scratch3hackCraft2 {
                 text: translation.getPosition_text[this.locale],
                 level: 9,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI
+                blockIconURI: getIconURI(9, 'normal')
             },{
                 opcode: 'moveRun',
                 text: translation.moveRun_text[this.locale],
                 level: 3,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockOrangeIconURI,
+                blockIconURI: getIconURI(3, 'ai'),
                 arguments: {
                     V: {
                         type: ArgumentType.NUMBER,
@@ -381,7 +388,7 @@ class Scratch3hackCraft2 {
                 text: translation.jump_text[this.locale],
                 level: 3,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockOrangeIconURI,
+                blockIconURI: getIconURI(3, 'ai'),
                 arguments: {
                     V: {
                         type: ArgumentType.NUMBER,
@@ -393,7 +400,7 @@ class Scratch3hackCraft2 {
                 text: translation.turnX_text[this.locale],
                 level: 3,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockOrangeIconURI,
+                blockIconURI: getIconURI(3, 'normal'),
                 arguments: {
                     degrees: {
                         type: ArgumentType.NUMBER,
@@ -405,20 +412,20 @@ class Scratch3hackCraft2 {
                 text: translation.makeSound_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockCyanIconURI
+                blockIconURI: getIconURI(1, 'normal')
             },{
             
                 opcode: 'attack',
                 text: translation.attack_text[this.locale],
                 level: 3,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockOrangeIconURI
+                blockIconURI: getIconURI(3, 'normal')
             },{
                 opcode: 'sendChat',
                 text: translation.sendChat_text[this.locale],
                 level: 2,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockLimeIconURI,
+                blockIconURI: getIconURI(2, 'normal'),
                 arguments: {
                     TEXT: {
                         type: ArgumentType.STRING,
@@ -430,7 +437,7 @@ class Scratch3hackCraft2 {
                 text: translation.setMark_text[this.locale],
                 level: 3,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockOrangeIconURI,
+                blockIconURI: getIconURI(3, 'normal'),
                 arguments: {
                     name: {
                         type: ArgumentType.STRING,
@@ -442,7 +449,7 @@ class Scratch3hackCraft2 {
                 text: translation.moveMark_text[this.locale],
                 level: 3,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockOrangeIconURI,
+                blockIconURI: getIconURI(3, 'normal'),
                 arguments: {
                     name: {
                         type: ArgumentType.STRING,
@@ -454,7 +461,7 @@ class Scratch3hackCraft2 {
                 text: translation.hasItemInSlot_text[this.locale],
                 level: 4,
                 blockType: BlockType.BOOLEAN,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     SLOT: {
                         type: ArgumentType.NUMBER,
@@ -466,7 +473,7 @@ class Scratch3hackCraft2 {
                 text: translation.isBlocked_text[this.locale],
                 level: 0,
                 blockType: BlockType.BOOLEAN,
-                blockIconURI: blockBlueIconURI,
+                blockIconURI: getIconURI(0, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -479,7 +486,7 @@ class Scratch3hackCraft2 {
                 text: translation.blockColor_text[this.locale],
                 level: 4,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     color: {
                         type: ArgumentType.COLOR,
@@ -489,7 +496,7 @@ class Scratch3hackCraft2 {
                 opcode: 'getTargetDistance',
                 level: 3,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockOrangeIconURI,
+                blockIconURI: getIconURI(3, 'normal'),
                 text: translation.getTargetDistance_text[this.locale],
                 arguments: {
                     TARGET: {
@@ -506,7 +513,7 @@ class Scratch3hackCraft2 {
                 text: translation.teleport_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -531,7 +538,7 @@ class Scratch3hackCraft2 {
                 text: translation.lookAtPosition_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -556,7 +563,7 @@ class Scratch3hackCraft2 {
                 text: translation.placeX_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -581,7 +588,7 @@ class Scratch3hackCraft2 {
                 text: translation.digX_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -606,7 +613,7 @@ class Scratch3hackCraft2 {
                 text: translation.useItemX_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -631,7 +638,7 @@ class Scratch3hackCraft2 {
                 text: translation.addForce_text[this.locale],
                 level: 4,
                 blockType: BlockType.COMMAND,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'ai'),
                 arguments: {
                     X: {
                         type: ArgumentType.NUMBER,
@@ -650,7 +657,7 @@ class Scratch3hackCraft2 {
                 opcode: 'getChatData',
                 level: 2,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockLimeIconURI,
+                blockIconURI: getIconURI(2, 'normal'),
                 text: translation.getChatData_text[this.locale],
                 arguments: {
                     CHAT_MENU: {
@@ -663,7 +670,7 @@ class Scratch3hackCraft2 {
                 opcode: 'getRedStoneData',
                 level: 1,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockCyanIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 text: translation.getRedStoneData_text[this.locale],
                 arguments: {
                     REDSTONE_MENU: {
@@ -676,7 +683,7 @@ class Scratch3hackCraft2 {
                 opcode: 'getBreakBlockData',
                 level: 4,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 text: translation.getBreakBlockData_text[this.locale],
                 arguments: {
                     BREAK_BLOCK_MENU: {
@@ -689,7 +696,7 @@ class Scratch3hackCraft2 {
                 opcode: 'getTargetData',
                 level: 5,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockYellowIconURI,
+                blockIconURI: getIconURI(5, 'normal'),
                 text: translation.getTargetData_text[this.locale],
                 arguments: {
                     TARGET_MENU: {
@@ -703,7 +710,7 @@ class Scratch3hackCraft2 {
                 text: translation.inspect_text[this.locale],
                 level: 4,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -728,7 +735,7 @@ class Scratch3hackCraft2 {
                 text: translation.distanceTo_text[this.locale],
                 level: 4,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockPurpleIconURI,
+                blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
                         type: 'string',
@@ -754,7 +761,7 @@ class Scratch3hackCraft2 {
                 level: 2,
                 blockType: BlockType.REPORTER,
                 rank: 1,
-                blockIconURI: blockLimeIconURI,
+                blockIconURI: getIconURI(2, 'normal'),
                 arguments: {
                     TEXT: {
                         type: ArgumentType.STRING,
@@ -767,7 +774,7 @@ class Scratch3hackCraft2 {
                 level: 9,
                 blockType: BlockType.COMMAND,
                 rank: 1,
-                blockIconURI: blockRedIconURI,
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     TEXT: {
                         type: ArgumentType.STRING,
@@ -779,7 +786,7 @@ class Scratch3hackCraft2 {
                 opcode: 'getResult',
                 level: 9,
                 blockType: BlockType.REPORTER,
-                blockIconURI: blockRedIconURI,
+                blockIconURI: getIconURI(9, 'normal'),
                 text: translation.getResult_text[this.locale]
             },
         ].filter(block => block.level <= this.level);
