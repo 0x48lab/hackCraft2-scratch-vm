@@ -255,8 +255,8 @@ class Scratch3hackCraft2 {
                 }
             },
             {
-                opcode: 'rollback',
-                text: translation.rollback_text[this.locale],
+                opcode: 'reset',
+                text: translation.reset_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(1, 'normal'),
@@ -1270,7 +1270,7 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async rollback(args, util) {
+    async reset(args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
             const ret = await this.sendMessage({

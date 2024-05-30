@@ -49,10 +49,10 @@ const translation = {
         'ja-Hira': 'じっこうがめんを[FLAG]にする',
         'en': 'Toggle the game screen',
     },
-    rollback_text: {
+    reset_text: {
         'ja': '前の状態に戻す',
         'ja-Hira': 'まえのじょうたいにもどす',
-        'en': 'rollback',
+        'en': 'reset',
     },
     move_text: {
         'ja': '[MOVE_MENU]に１移動',
