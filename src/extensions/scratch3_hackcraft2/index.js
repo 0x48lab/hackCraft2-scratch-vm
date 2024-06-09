@@ -298,6 +298,11 @@ class Scratch3hackCraft2 {
                         type: 'string',
                         defaultValue: 'Front',
                         menu: 'DIR_MENU_OPTIONS'
+                    },
+                    SIDE_MENU: {
+                        type: 'string',
+                        defaultValue: 'Default',
+                        menu: 'SIDE_MENU_OPTIONS'
                     }
                 }
             },{
@@ -581,6 +586,11 @@ class Scratch3hackCraft2 {
                     Z: {
                         type: ArgumentType.NUMBER,
                         defaultValue: '0'
+                    },
+                    SIDE_MENU: {
+                        type: 'string',
+                        defaultValue: 'Default',
+                        menu: 'SIDE_MENU_OPTIONS'
                     }
                 }
             },{
@@ -774,7 +784,7 @@ class Scratch3hackCraft2 {
                 level: 9,
                 blockType: BlockType.COMMAND,
                 rank: 1,
-                blockIconURI: getIconURI(1, 'normal'),
+                blockIconURI: getIconURI(9, 'normal'),
                 arguments: {
                     TEXT: {
                         type: ArgumentType.STRING,
@@ -876,6 +886,36 @@ class Scratch3hackCraft2 {
                     {
                         text: translation.mnu_down_text[this.locale],
                         value: 'Down'
+                    }
+                ],
+                SIDE_MENU_OPTIONS: [
+                    {
+                        text: translation.mnu_side_none_text[this.locale],
+                        value: 'Default'
+                    },
+                    {
+                        text: translation.mnu_side_top_text[this.locale],
+                        value: 'Top'
+                    },
+                    {
+                        text: translation.mnu_side_bottom_text[this.locale],
+                        value: 'Bottom'
+                    },
+                    {
+                        text: translation.mnu_side_right_text[this.locale],
+                        value: 'Right'
+                    },
+                    {
+                        text: translation.mnu_side_left_text[this.locale],
+                        value: 'Left'
+                    },
+                    {
+                        text: translation.mnu_side_front_text[this.locale],
+                        value: 'Front'
+                    },
+                    {
+                        text: translation.mnu_side_back_text[this.locale],
+                        value: 'Back'
                     }
                 ],
                 CLICKED_TARGET_MENU_OPTIONS:[
@@ -1546,7 +1586,8 @@ class Scratch3hackCraft2 {
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `place${args.DIR_MENU}`
+                    name: `place${args.DIR_MENU}`,
+                    side: args.SIDE_MENU
                 }
             });
             const response = JSON.parse(ret);

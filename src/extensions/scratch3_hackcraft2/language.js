@@ -65,9 +65,9 @@ const translation = {
         'en': 'Turn toward [TURN_MENU]',
     },
     place_text: {
-        'ja': '[DIR_MENU]に置く',
-        'ja-Hira': '[DIR_MENU]におく',
-        'en': 'Place in [DIR_MENU]',
+        'ja': '[DIR_MENU]に[SIDE_MENU]で置く',
+        'ja-Hira': '[DIR_MENU]に[SIDE_MENU]でおく',
+        'en': 'Place in [DIR_MENU] by [SIDE_MENU]',
     },
     dig_text: {
         'ja': '[DIR_MENU]を壊す',
@@ -170,9 +170,9 @@ const translation = {
         'en': 'Look at [COORDINATE][X][Y][Z]',
     },
     placeX_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標に置く',
-        'ja-Hira': '[COORDINATE][X][Y][Z]のいちにおく',
-        'en': 'Set block at [COORDINATE][X][Y][Z]',
+        'ja': '[COORDINATE][X][Y][Z]座標に[SIDE_MENU]で置く',
+        'ja-Hira': '[COORDINATE][X][Y][Z]のいちに[SIDE_MENU]でおく',
+        'en': 'Set block at [COORDINATE][X][Y][Z] by [SIDE_MENU]',
     },
     digX_text: {
         'ja': '[COORDINATE][X][Y][Z]座標を壊す',
@@ -393,6 +393,41 @@ const translation = {
         'ja': 'オフ',
         'ja-Hira': 'オフ',
         'en': 'Off',
+    },
+    mnu_side_none_text: {
+        'ja': '指定なし',
+        'ja-Hira': 'していなし',
+        'en': 'Default',
+    },
+    mnu_side_top_text: {
+        'ja': '上付き',
+        'ja-Hira': 'うえつき',
+        'en': 'Top',
+    },
+    mnu_side_bottom_text: {
+        'ja': '下付き',
+        'ja-Hira': 'したつき',
+        'en': 'Bottom',
+    },
+    mnu_side_right_text: {
+        'ja': '右向き',
+        'ja-Hira': 'みぎむき',
+        'en': 'Right',
+    },
+    mnu_side_left_text: {
+        'ja': '左向き',
+        'ja-Hira': 'ひだりむき',
+        'en': 'Left',
+    },
+    mnu_side_front_text: {
+        'ja': '前向き',
+        'ja-Hira': 'まえむき',
+        'en': 'Front',
+    },
+    mnu_side_back_text: {
+        'ja': '後ろ向き',
+        'ja-Hira': 'うしろむき',
+        'en': 'Back',
     },
 };
 const localse = ['en', 'ja', 'ja-Hira'];
