@@ -50,87 +50,145 @@ class Scratch3hackCraft2 {
 
         document.title = document.title+" {"+this.entity_name+"}";
 
-        //test
-        //this.display3D = false;
-        //console.log('constructor');
-        //this._waitForStageElement();
+        console.log('constructor');
 
-        //this._add3dViewToggleButton();
+        this._initUI();
+    }
+
+    /**
+     * @param {string} className className
+     * @returns {Promise<Element>} Element
+     */
+    _waitForUI (className) {
+        return new Promise(resolve => {
+            const checkInterval = setInterval(() => {
+                const element = document.querySelector(`[class^="${className}"]`);
+                if (element) {
+                    resolve(element);
+                    clearInterval(checkInterval);
+                }
+            }, 100);
+        });
+    }
+
+    /**
+     * @param {string} className className
+     * @returns {Promise<Element[]>} Elements
+     */
+    _waitForUIAll (className) {
+        return new Promise(resolve => {
+            const checkInterval = setInterval(() => {
+                const elements = document.querySelectorAll(`[class^="${className}"]`);
+                if (elements.length) {
+                    resolve(elements);
+                    clearInterval(checkInterval);
+                }
+            }, 100);
+        });
+    }
+
+    async _initUI () {
+        this.display3D = true;
+
+        this._addCSS();
+
+        this.uiHeader = await this._waitForUI('stage-header_stage-size-row');
+        this.uiCanvasWrapper = await this._waitForUI('stage-wrapper_stage-canvas-wrapper');
+        this.uiCanvasWrapper.classList.add('hackcraft', 'canvas-wrapper');
+        // this.uiStageWrapper = await this._waitForUI('stage_stage-wrapper');
+        // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
+
+        this._add3dViewToggleButton();
+        // this._addOpacitySlider();
+
+        this._add3dView();
+
+        this._addEventListeners();
+    }
+
+    _addCSS () {
+        const linkElem = document.createElement('link');
+        linkElem.setAttribute('rel', 'stylesheet');
+        linkElem.setAttribute('href', 'static/hackcraft.css');
+
+        document.getElementsByTagName('head')[0].appendChild(linkElem);
     }
 
     _add3dViewToggleButton () {
-        console.log('WORKS');
+        const self = this;
+
+        const otherButton = this.uiHeader.querySelector('[class^="toggle-buttons_button"]');
         
         const button = document.createElement('button');
-        // const p = document.createElement('p');
-        // const span = document.createElement('span');
-        // div.append(p);
-        // div.prepend(span);
-
-        const rowEl = document.querySelector('[class^="stage-header_stage-size-row"]');
-        rowEl.prepend(button);
-    }
-
-    _waitForStageElement() {
-        const checkInterval = setInterval(() => {
-            // 正しいクラス名を使用してステージのキャンバス要素を取得
-            const stageElement = document.querySelector('[class^="stage_stage_"]');
-            //const stageElement = document.querySelector('.stage_stage_1fD7k .stage_frame-wrapper_1JaS_');
-            if (stageElement) {
-                clearInterval(checkInterval);
-                this._createCanvas(stageElement);
+        button.className = `${otherButton.className} hackcraft toggle3d on`;
+        button.textContent = '3D';
+        button.addEventListener('click', () => {
+            self._toggle3dView();
+            if (self.display3D) {
+                button.classList.add('on');
+            } else {
+                button.classList.remove('on');
             }
-        }, 100); // 100msごとにチェック
+        });
+
+        this.uiToggleButton = button;
+        this.uiHeader.prepend(button);
     }
 
-    _createCanvas(stageElement) {
-        // 2Dキャンバスを作成
-        this.canvas = document.createElement('canvas');
-        this.canvas.width = stageElement.clientWidth;
-        this.canvas.height = stageElement.clientHeight;
-        this.canvas.style.position = 'absolute';
-        this.canvas.style.top = '0';
-        this.canvas.style.left = '0';
-        this.canvas.style.zIndex = '1'; // z-indexを設定して前面に表示
+    _addOpacitySlider () {
+        const self = this;
+        
+        const slider = document.createElement('input');
+        slider.setAttribute('type', 'range');
+        slider.setAttribute('min', '0');
+        slider.setAttribute('max', '1');
+        slider.setAttribute('step', '0.1');
+        const setOpacity = () => {
+            self.uiThreedView.style.opacity = slider.value;
+        };
+        slider.addEventListener('change', setOpacity);
+        slider.addEventListener('input', setOpacity);
 
-        // ステージ要素にキャンバスを追加
-        stageElement.appendChild(this.canvas);
+        // this.uiToggleButton = slider;
+        this.uiHeader.prepend(slider);
+    }
 
-        // 2Dコンテキストを取得
-        this.ctx = this.canvas.getContext('2d');
-        if (!this.ctx) {
-            console.error('2Dコンテキストが取得できません。');
-            return;
+    _add3dView () {
+        require('./3dview/3dview.umd.cjs');
+
+        const threedview = document.createElement('threed-view');
+        threedview.setAttribute('assets-location', '/static');
+        
+        this.uiCanvasWrapper.prepend(threedview);
+        this.uiThreedView = threedview;
+    }
+
+    _addGlobalClickListener (className, callback) {
+        document.addEventListener('click', e => {
+            if (e.target instanceof HTMLElement) {
+                const target = e.target.closest(`[class^="${className}"]`);
+                if (target) {
+                    callback(e.target);
+                }
+            }
+        });
+    }
+
+    _addEventListeners () {
+        // Toggle fullscreen stage button, also: stage-header_stage-button
+        this._addGlobalClickListener('button_outlined-button', () => {
+            // Fixes 3d view not resizing properly.
+            window.dispatchEvent(new Event('resize'));
+        });
+    }
+
+    _toggle3dView () {
+        this.display3D = !this.display3D;
+        if (this.display3D) {
+            this.uiThreedView.style.display = 'flex';
+        } else {
+            this.uiThreedView.style.display = 'none';
         }
-
-        // 背景とテキストの描画
-        if(this.display3D){
-            this._drawBackgroundAndText();
-        }
-    }
-
-    _drawBackgroundAndText() {
-        const ctx = this.ctx;
-        const width = this.canvas.width;
-        const height = this.canvas.height;
-
-        // 透明度50%の黒い背景を描画
-        ctx.fillStyle = 'rgba(0, 0, 0, 1)';
-        ctx.fillRect(0, 0, width, height);
-
-        // テキストの設定
-        ctx.font = '48px sans-serif';
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // テキストを中央に描画
-        ctx.fillText('hackCraft', width / 2, height / 2);
-    }
-
-    _clearCanvas() {
-        const ctx = this.ctx;
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     getBlocks () {
