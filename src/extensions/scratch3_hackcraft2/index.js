@@ -1645,7 +1645,7 @@ class Scratch3hackCraft2 {
                 type: 'call',
                 data: {
                     name: `place${args.DIR_MENU}`,
-                    side: args.SIDE_MENU
+                    args: [args.SIDE_MENU]
                 }
             });
             const response = JSON.parse(ret);
@@ -1679,7 +1679,7 @@ class Scratch3hackCraft2 {
                 type: 'call',
                 data: {
                     name: 'placeX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [args.X, args.Y, args.Z, args.COORDINATE, args.SIDE_MENU]
                     }
             });
             const response = JSON.parse(ret);
