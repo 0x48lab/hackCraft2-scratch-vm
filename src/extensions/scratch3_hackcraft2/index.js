@@ -33,6 +33,11 @@ class Scratch3hackCraft2 {
         this.runtime = runtime;
         this.locale = this.setLocale();
 
+        // 最後のスラッシュを除去したパスを基に、ルート相対の静的パスを生成
+        const pathname = window.location.pathname.replace(/\/[^/]*$/, ''); 
+        this.staticUrl = '/static';//`${pathname}/static`;
+
+
         this.runtime.on('PROJECT_START', this.onStart.bind(this));
         this.runtime.on('PROJECT_RUN_STOP', this.onRunStop.bind(this));
         const urlParams = new URLSearchParams(window.location.search);
@@ -110,7 +115,7 @@ class Scratch3hackCraft2 {
     _addCSS () {
         const linkElem = document.createElement('link');
         linkElem.setAttribute('rel', 'stylesheet');
-        linkElem.setAttribute('href', 'static/hackcraft.css');
+        linkElem.setAttribute('href', this.staticUrl+'/hackcraft.css');
 
         document.getElementsByTagName('head')[0].appendChild(linkElem);
     }
@@ -158,7 +163,6 @@ class Scratch3hackCraft2 {
         require('./3dview/3dview.umd.cjs');
 
         const threedview = document.createElement('threed-view');
-
         const origin = window.location.origin;
         const pathname = window.location.pathname;
         const pathPrefix = pathname.substring(0, pathname.lastIndexOf('/'));
@@ -422,9 +426,9 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'putToChest',
                 text: translation.putToChest_text[this.locale],
-                level: 9,
+                level: 6,
                 blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(9, 'normal'),
+                blockIconURI: getIconURI(6, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -435,9 +439,9 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'takeFromChest',
                 text: translation.takeFromChest_text[this.locale],
-                level: 9,
+                level: 6,
                 blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(9, 'normal'),
+                blockIconURI: getIconURI(6, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
@@ -448,9 +452,9 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'getPosition',
                 text: translation.getPosition_text[this.locale],
-                level: 9,
+                level: 6,
                 blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(9, 'normal')
+                blockIconURI: getIconURI(6, 'normal')
             },{
                 opcode: 'moveRun',
                 text: translation.moveRun_text[this.locale],
@@ -856,10 +860,10 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'execCommand',
                 text: translation.execCommand_text[this.locale],
-                level: 9,
+                level: 7,
                 blockType: BlockType.COMMAND,
                 rank: 1,
-                blockIconURI: getIconURI(9, 'normal'),
+                blockIconURI: getIconURI(7, 'normal'),
                 arguments: {
                     TEXT: {
                         type: ArgumentType.STRING,
@@ -869,9 +873,9 @@ class Scratch3hackCraft2 {
             }
             ,{
                 opcode: 'getResult',
-                level: 9,
+                level: 7,
                 blockType: BlockType.REPORTER,
-                blockIconURI: getIconURI(9, 'normal'),
+                blockIconURI: getIconURI(7, 'normal'),
                 text: translation.getResult_text[this.locale]
             },
         ].filter(block => block.level <= this.level);
