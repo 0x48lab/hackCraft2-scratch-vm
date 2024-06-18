@@ -95,7 +95,8 @@ class Scratch3hackCraft2 {
         this.uiHeader = await this._waitForUI('stage-header_stage-size-row');
         this.uiCanvasWrapper = await this._waitForUI('stage-wrapper_stage-canvas-wrapper');
         this.uiCanvasWrapper.classList.add('hackcraft', 'canvas-wrapper');
-        // this.uiStageWrapper = await this._waitForUI('stage_stage-wrapper');
+        this.uiStageWrapper = await this._waitForUI('stage_stage-wrapper');
+        this.uiCanvas = this.uiStageWrapper.getElementsByTagName('canvas')[0];
         // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
         this._add3dViewToggleButton();
@@ -157,7 +158,11 @@ class Scratch3hackCraft2 {
         require('./3dview/3dview.umd.cjs');
 
         const threedview = document.createElement('threed-view');
-        threedview.setAttribute('assets-location', '/static');
+
+        const origin = window.location.origin;
+        const pathname = window.location.pathname;
+        const pathPrefix = pathname.substring(0, pathname.lastIndexOf('/'));
+        threedview.setAttribute('assets-location', `${origin}${pathPrefix}/static`);
         
         this.uiCanvasWrapper.prepend(threedview);
         this.uiThreedView = threedview;
@@ -174,12 +179,24 @@ class Scratch3hackCraft2 {
         });
     }
 
+    _forwardEventsToCanvas () {
+        const eventList = ['mousedown', 'touchstart'];
+        for (const eventName of eventList) {
+            this.uiThreedView.addEventListener(eventName, e => {
+                const eventClone = new e.constructor(e.type, e);
+                this.uiCanvas.dispatchEvent(eventClone);
+            });
+        }
+    }
+
     _addEventListeners () {
         // Toggle fullscreen stage button, also: stage-header_stage-button
         this._addGlobalClickListener('button_outlined-button', () => {
             // Fixes 3d view not resizing properly.
             window.dispatchEvent(new Event('resize'));
         });
+
+        this._forwardEventsToCanvas();
     }
 
     _toggle3dView () {
