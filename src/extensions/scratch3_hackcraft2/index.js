@@ -35,7 +35,7 @@ class Scratch3hackCraft2 {
 
         // 最後のスラッシュを除去したパスを基に、ルート相対の静的パスを生成
         const pathname = window.location.pathname.replace(/\/[^/]*$/, ''); 
-        this.staticUrl = '/static';//`${pathname}/static`;
+        this.staticUrl = `${pathname}/static`;
 
 
         this.runtime.on('PROJECT_START', this.onStart.bind(this));
