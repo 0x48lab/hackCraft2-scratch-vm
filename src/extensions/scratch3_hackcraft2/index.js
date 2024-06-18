@@ -157,7 +157,11 @@ class Scratch3hackCraft2 {
         require('./3dview/3dview.umd.cjs');
 
         const threedview = document.createElement('threed-view');
-        threedview.setAttribute('assets-location', '/static');
+
+        const origin = window.location.origin;
+        const pathname = window.location.pathname;
+        const pathPrefix = pathname.substring(0, pathname.lastIndexOf('/'));
+        threedview.setAttribute('assets-location', `${origin}${pathPrefix}/static`);
         
         this.uiCanvasWrapper.prepend(threedview);
         this.uiThreedView = threedview;
