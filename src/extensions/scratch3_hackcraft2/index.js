@@ -566,6 +566,19 @@ class Scratch3hackCraft2 {
                     }
                 }
             },{
+                opcode: 'isCanDig',
+                text: translation.isCanDig_text[this.locale],
+                level: 0,
+                blockType: BlockType.BOOLEAN,
+                blockIconURI: getIconURI(0, 'normal'),
+                arguments: {
+                    DIR_MENU: {
+                        type: 'string',
+                        defaultValue: 'Front',
+                        menu: 'DIR_MENU_OPTIONS'
+                    }
+                }
+            },{
                 opcode: 'blockColor',
                 text: translation.blockColor_text[this.locale],
                 level: 4,
@@ -1875,6 +1888,23 @@ class Scratch3hackCraft2 {
             });
             const response = JSON.parse(ret);
             console.log("isBlocked response=", response.data);
+            return response.data == 'true';
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async isCanDig (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            const ret = await this.sendMessage({
+                type: 'call',
+                data: {
+                    name: `isCanDig${args.DIR_MENU}`
+                }
+            });
+            const response = JSON.parse(ret);
+            console.log("isCanDig response=", response.data);
             return response.data == 'true';
         } catch (error) {
             console.error(error);
