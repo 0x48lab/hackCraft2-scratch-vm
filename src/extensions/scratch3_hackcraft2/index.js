@@ -100,6 +100,7 @@ class Scratch3hackCraft2 {
         // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
         this._add3dViewToggleButton();
+        this._addReloadButton();
         // this._addOpacitySlider();
 
         this._add3dView();
@@ -121,7 +122,7 @@ class Scratch3hackCraft2 {
         const otherButton = this.uiHeader.querySelector('[class^="toggle-buttons_button"]');
         
         const button = document.createElement('button');
-        button.className = `${otherButton.className} hackcraft toggle3d on`;
+        button.className = `${otherButton.className} hackcraft button toggle3d on`;
         button.textContent = '3D';
         button.addEventListener('click', () => {
             self._toggle3dView();
@@ -133,6 +134,24 @@ class Scratch3hackCraft2 {
         });
 
         this.uiToggleButton = button;
+        this.uiHeader.prepend(button);
+    }
+
+    _addReloadButton () {
+        const self = this;
+
+        const otherButton = this.uiHeader.querySelector(
+            '[class^="toggle-buttons_row"] ' +
+            '[class^="toggle-buttons_button"]'
+        );
+        
+        const button = document.createElement('button');
+        button.className = `${otherButton.className} hackcraft button reload`;
+        button.addEventListener('click', () => {
+            self._reload();
+        });
+
+        this.uiReloadButton = button;
         this.uiHeader.prepend(button);
     }
 
@@ -163,6 +182,11 @@ class Scratch3hackCraft2 {
         const pathname = window.location.pathname;
         const pathPrefix = pathname.substring(0, pathname.lastIndexOf('/'));
         threedview.setAttribute('assets-location', `${origin}${pathPrefix}/static`);
+
+        threedview.addEventListener('setup', it => {
+            const api = it.detail[0];
+            this.threedviewApi = api;
+        }, false);
         
         this.uiCanvasWrapper.prepend(threedview);
         this.uiThreedView = threedview;
@@ -206,6 +230,10 @@ class Scratch3hackCraft2 {
         } else {
             this.uiThreedView.style.display = 'none';
         }
+    }
+
+    _reload () {
+        this.threedviewApi.reload();
     }
 
     getBlocks () {
