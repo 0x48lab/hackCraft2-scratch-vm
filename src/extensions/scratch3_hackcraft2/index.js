@@ -911,6 +911,18 @@ class Scratch3hackCraft2 {
                         defaultValue: ' '
                     }
                 }
+            },
+            {
+                opcode: 'setOpacity',
+                level: 1,
+                blockType: BlockType.COMMAND,
+                text: translation.setOpaticity_text[this.locale],
+                arguments: {
+                    VALUE: {
+                        type: ArgumentType.NUMBER,
+                        defaultValue: 100
+                    }
+                }
             }
             ,{
                 opcode: 'getResult',
@@ -1763,6 +1775,15 @@ class Scratch3hackCraft2 {
             });
             const response = JSON.parse(ret);
             if (response.data !== "true") this.printLog(spriteId, '実行エラー');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async setOpacity (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            this.uiThreedView.style.opacity = args.VALUE / 100;
         } catch (error) {
             console.error(error);
         }

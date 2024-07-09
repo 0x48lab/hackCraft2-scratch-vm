@@ -239,6 +239,11 @@ const translation = {
         'ja-Hira': '/[TEXT]',
         'en': '/[TEXT]',
     },
+    setOpaticity_text: {
+        'ja': '３D画面の不透明度[VALUE]',
+        'ja-Hira': '３じげんがめんのふとうめいど[VALUE]',
+        'en': 'set 3DView opacity to[VALUE]',
+    },
     mnu_front_text: {
         'ja': '前',
         'ja-Hira': 'まえ',
