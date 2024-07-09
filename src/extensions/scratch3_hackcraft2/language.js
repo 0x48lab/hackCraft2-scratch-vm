@@ -149,6 +149,11 @@ const translation = {
         'ja-Hira': '[DIR_MENU]にブロックがある？',
         'en': 'Is there a block in [DIR_MENU]?',
     },
+    isCanDig_text: {
+        'ja': '[DIR_MENU]のブロックが壊せる？',
+        'ja-Hira': '[DIR_MENU]のブロックがこわせる？',
+        'en': 'Can break the [DIR_MENU]?',
+    },
     blockColor_text: {
         'ja': '[color]色のブロック',
         'ja-Hira': '[color]いろのブロック',
