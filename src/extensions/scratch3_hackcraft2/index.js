@@ -520,6 +520,12 @@ class Scratch3hackCraft2 {
                     }
                 }
             },{
+                opcode: 'harvest',
+                text: translation.harvest_text[this.locale],
+                level: 1,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(1, 'normal')
+            },{
                 opcode: 'makeSound',
                 text: translation.makeSound_text[this.locale],
                 level: 1,
@@ -605,6 +611,17 @@ class Scratch3hackCraft2 {
                         defaultValue: 'Front',
                         menu: 'DIR_MENU_OPTIONS'
                     }
+                }
+            },{
+                opcode: 'getHarvest',
+                text: translation.get_harvest_text[this.locale],
+                level: 1,
+                blockType: BlockType.REPORTER,
+                blockIconURI: getIconURI(1, 'normal'),
+                arguments: {
+                    color: {
+                        type: ArgumentType.COLOR,
+                    },
                 }
             },{
                 opcode: 'blockColor',
@@ -916,6 +933,7 @@ class Scratch3hackCraft2 {
                 opcode: 'setOpacity',
                 level: 1,
                 blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(1, 'normal'),
                 text: translation.setOpaticity_text[this.locale],
                 arguments: {
                     VALUE: {
@@ -1191,9 +1209,24 @@ class Scratch3hackCraft2 {
 
     }
 
-    async makeSound () {
-        console.log('onStart ');
+    async harvest (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            const ret = await this.sendMessage({
+                type: 'call',
+                data: {
+                    name: 'digX',
+                    args: [0, 0, 0, "^"]
+                }
+            });
+            const response = JSON.parse(ret);
+            if (response.data !== "true") this.printLog(spriteId, 'それは壊せなかったよ');
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
+    async makeSound () {
         try {
             const ret = await this.sendMessage({
                 type: 'call',
@@ -1207,8 +1240,6 @@ class Scratch3hackCraft2 {
     }
 
     async attack () {
-        console.log('onStart ');
-
         try {
             const ret = await this.sendMessage({
                 type: 'call',
@@ -1788,6 +1819,31 @@ class Scratch3hackCraft2 {
             console.error(error);
         }
     }
+
+    async getHarvest (args, util) {
+        console.log("getHarvest")
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            const ret = await this.sendMessage({
+                type: 'call',
+                data: {
+                    name: 'inspect',
+                    args: [0, 0, 0, "^"]
+                }
+            });
+            const response = JSON.parse(ret);
+            if (response.type === 'result') {
+                const data = JSON.parse(response.data);
+                if(data.data === undefined || data.data == 0) return 0;
+                return data.data;
+            } else {
+                return 0;
+            }  
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
 
     async inspect (args, util) {
         const spriteId = util.target.sprite.spriteId;

@@ -114,6 +114,16 @@ const translation = {
         'ja-Hira': '[degrees]どまわる',
         'en': 'Turn [degrees] degrees',
     },
+    harvest_text: {
+        'ja': '収穫する',
+        'ja-Hira': 'しゅうかくする',
+        'en': 'harvest',
+    },
+    get_harvest_text: {
+        'ja': '足元のの状態',
+        'ja-Hira': 'あしもとのじょうたい',
+        'en': 'Growth level',
+    },
     makeSound_text: {
         'ja': '鳴く',
         'ja-Hira': 'なく',
