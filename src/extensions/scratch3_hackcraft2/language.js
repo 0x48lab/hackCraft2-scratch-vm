@@ -119,6 +119,21 @@ const translation = {
         'ja-Hira': 'しゅうかくする',
         'en': 'harvest',
     },
+    till_text: {
+        'ja': '耕す',
+        'ja-Hira': 'たがやす',
+        'en': 'till',
+    },
+    flatten_text: {
+        'ja': '平たくする',
+        'ja-Hira': 'ひらたくする',
+        'en': 'flatten',
+    },
+    plant_text: {
+        'ja': '植える',
+        'ja-Hira': 'うえる',
+        'en': 'plant',
+    },
     get_harvest_text: {
         'ja': '足元のの状態',
         'ja-Hira': 'あしもとのじょうたい',

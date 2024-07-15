@@ -302,9 +302,9 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'waitForRedstone',
                 text: translation.waitForRedstone_text[this.locale],
-                level: 1,
+                level: 2,
                 blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(1, 'normal'),
+                blockIconURI: getIconURI(2, 'normal'),
             },{
                 opcode: 'waitForChat',
                 text: translation.waitForChat_text[this.locale],
@@ -317,7 +317,15 @@ class Scratch3hackCraft2 {
                 level: 4,
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
-            },{
+            },
+            {
+                opcode: 'reset',
+                text: translation.reset_text[this.locale],
+                level: 1,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(1, 'normal'),
+            },
+            {
                 opcode: 'grabItem',
                 text: translation.grabItem_text[this.locale],
                 level: 1,
@@ -360,13 +368,6 @@ class Scratch3hackCraft2 {
                         defaultValue: 'dirt'
                     }
                 }
-            },
-            {
-                opcode: 'reset',
-                text: translation.reset_text[this.locale],
-                level: 1,
-                blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(1, 'normal'),
             },
             {
                 opcode: 'move',
@@ -520,17 +521,35 @@ class Scratch3hackCraft2 {
                     }
                 }
             },{
+                opcode: 'plant',
+                text: translation.plant_text[this.locale],
+                level: 1,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(1, 'normal')
+            },{
                 opcode: 'harvest',
                 text: translation.harvest_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(1, 'normal')
             },{
-                opcode: 'makeSound',
-                text: translation.makeSound_text[this.locale],
+                opcode: 'till',
+                text: translation.till_text[this.locale],
                 level: 1,
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(1, 'normal')
+            },{
+                opcode: 'flatten',
+                text: translation.flatten_text[this.locale],
+                level: 1,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(1, 'normal')
+            },{
+                opcode: 'makeSound',
+                text: translation.makeSound_text[this.locale],
+                level: 2,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(2, 'normal')
             },{
             
                 opcode: 'attack',
@@ -815,9 +834,9 @@ class Scratch3hackCraft2 {
                 }
             },{
                 opcode: 'getRedStoneData',
-                level: 1,
+                level: 2,
                 blockType: BlockType.REPORTER,
-                blockIconURI: getIconURI(1, 'normal'),
+                blockIconURI: getIconURI(2, 'normal'),
                 text: translation.getRedStoneData_text[this.locale],
                 arguments: {
                     REDSTONE_MENU: {
@@ -1220,7 +1239,58 @@ class Scratch3hackCraft2 {
                 }
             });
             const response = JSON.parse(ret);
-            if (response.data !== "true") this.printLog(spriteId, 'それは壊せなかったよ');
+            if (response.data !== "true") this.printLog(spriteId, 'それは収穫できなかったよ');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async plant (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            const ret = await this.sendMessage({
+                type: 'call',
+                data: {
+                    name: 'plantX',
+                    args: [0, -1, 0, "^"]
+                }
+            });
+            const response = JSON.parse(ret);
+            if (response.data !== "true") this.printLog(spriteId, 'それは植えれなかったよ');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async till (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            const ret = await this.sendMessage({
+                type: 'call',
+                data: {
+                    name: 'tillX',
+                    args: [0, -1, 0, "^"]
+                }
+            });
+            const response = JSON.parse(ret);
+            if (response.data !== "true") this.printLog(spriteId, 'それは耕せなかったよ');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async flatten (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        try {
+            const ret = await this.sendMessage({
+                type: 'call',
+                data: {
+                    name: 'flattenX',
+                    args: [0, -1, 0, "^"]
+                }
+            });
+            const response = JSON.parse(ret);
+            if (response.data !== "true") this.printLog(spriteId, 'それは平たくできなかったよ');
         } catch (error) {
             console.error(error);
         }
