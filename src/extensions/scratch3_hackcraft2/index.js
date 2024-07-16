@@ -106,6 +106,7 @@ class Scratch3hackCraft2 {
 
         this._add3dViewToggleButton();
         this._addReloadButton();
+        this._addPointerEventsButton();
         // this._addOpacitySlider();
 
         this._add3dView();
@@ -131,12 +132,8 @@ class Scratch3hackCraft2 {
         button.textContent = '3D';
         button.addEventListener('click', () => {
             self._toggle3dView();
-            if (self.display3D) {
-                button.classList.add('on');
-            } else {
-                button.classList.remove('on');
-            }
         });
+        button.title = 'Toggle 3D view.';
 
         this.uiToggleButton = button;
         this.uiHeader.prepend(button);
@@ -155,8 +152,28 @@ class Scratch3hackCraft2 {
         button.addEventListener('click', () => {
             self._reload();
         });
+        button.title = 'Reload 3D view world.';
 
         this.uiReloadButton = button;
+        this.uiHeader.prepend(button);
+    }
+
+    _addPointerEventsButton () {
+        const self = this;
+
+        const otherButton = this.uiHeader.querySelector(
+            '[class^="toggle-buttons_row"] ' +
+            '[class^="toggle-buttons_button"]'
+        );
+        
+        const button = document.createElement('button');
+        button.className = `${otherButton.className} hackcraft button pointer-events`;
+        button.addEventListener('click', () => {
+            self._togglePointerEvents();
+        });
+        button.title = 'Forward mouse events to Scratch canvas.';
+
+        this.uiPointerEventsButton = button;
         this.uiHeader.prepend(button);
     }
 
@@ -208,13 +225,26 @@ class Scratch3hackCraft2 {
     }
 
     _forwardEventsToCanvas () {
+        this.__forwardCanvasEventsHandler = e => {
+            const eventClone = new e.constructor(e.type, e);
+            this.uiCanvas.dispatchEvent(eventClone);
+        };
+
         const eventList = ['mousedown', 'touchstart'];
         for (const eventName of eventList) {
-            this.uiThreedView.addEventListener(eventName, e => {
-                const eventClone = new e.constructor(e.type, e);
-                this.uiCanvas.dispatchEvent(eventClone);
-            });
+            this.uiThreedView.addEventListener(eventName, this.__forwardCanvasEventsHandler);
         }
+        this.isForwardingEventsToCanvas = true;
+        this.uiPointerEventsButton.classList.add('on');
+    }
+
+    _removeForwardEventsToCanvasHandler () {
+        const eventList = ['mousedown', 'touchstart'];
+        for (const eventName of eventList) {
+            this.uiThreedView.removeEventListener(eventName, this.__forwardCanvasEventsHandler);
+        }
+        this.isForwardingEventsToCanvas = false;
+        this.uiPointerEventsButton.classList.remove('on');
     }
 
     _addEventListeners () {
@@ -231,13 +261,31 @@ class Scratch3hackCraft2 {
         this.display3D = !this.display3D;
         if (this.display3D) {
             this.uiThreedView.style.display = 'flex';
+            
+            this.uiToggleButton.classList.add('on');
+            
+            this.uiPointerEventsButton.classList.remove('hidden');
+            this.uiReloadButton.classList.remove('hidden');
         } else {
             this.uiThreedView.style.display = 'none';
+            
+            this.uiToggleButton.classList.remove('on');
+
+            this.uiPointerEventsButton.classList.add('hidden');
+            this.uiReloadButton.classList.add('hidden');
         }
     }
 
     _reload () {
         this.threedviewApi.reload();
+    }
+
+    _togglePointerEvents () {
+        if (this.isForwardingEventsToCanvas) {
+            this._removeForwardEventsToCanvasHandler();
+        } else {
+            this._forwardEventsToCanvas();
+        }
     }
 
     getBlocks () {
