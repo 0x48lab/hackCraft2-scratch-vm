@@ -175,8 +175,8 @@ const translation = {
         'en': 'Is there a block in [DIR_MENU]?',
     },
     isCanDig_text: {
-        'ja': '[DIR_MENU]のブロックが壊せる？',
-        'ja-Hira': '[DIR_MENU]のブロックがこわせる？',
+        'ja': '[DIR_MENU]のブロックを壊せる？',
+        'ja-Hira': '[DIR_MENU]のブロックをこわせる？',
         'en': 'Can break the [DIR_MENU]?',
     },
     blockColor_text: {
