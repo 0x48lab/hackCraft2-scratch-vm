@@ -2414,7 +2414,7 @@ class Scratch3hackCraft2 {
                 type: 'call',
                 data: {
                     name: 'teleport',
-                    args: ['', pos.x, pos.y, pos.z]
+                    args: [pos.x, pos.y, pos.z, '']
                     }
             });
             //const response = JSON.parse(ret);
