@@ -165,6 +165,19 @@ class VirtualMachine extends EventEmitter {
         this.flyoutBlockListener = this.flyoutBlockListener.bind(this);
         this.monitorBlockListener = this.monitorBlockListener.bind(this);
         this.variableListener = this.variableListener.bind(this);
+
+        this.initHackCraftExtension();
+    }
+
+    initHackCraftExtension () {
+        this.runtime.on('HACKCRAFT_GET_PROJECT_BLOB', async callback => {
+            const blob = await this.saveProjectSb3();
+            callback(blob);
+        });
+
+        this.runtime.on('HACKCRAFT_LOAD_PROJECT_BLOB', blob => {
+            this.loadProject(blob);
+        });
     }
 
     /**

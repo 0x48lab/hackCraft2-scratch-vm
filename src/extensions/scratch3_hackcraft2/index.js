@@ -37,6 +37,13 @@ class Scratch3hackCraft2 {
         const pathname = window.location.pathname.replace(/\/[^/]*$/, ''); 
         this.staticUrl = `${pathname}/static`;
 
+        this.isDirty = false;
+        this.runtime.on('PROJECT_CHANGED', () => {
+            this._setDirty();
+        });
+        this.runtime.on('PROJECT_RUN_START', () => {
+            this._saveProject();
+        });
 
         this.runtime.on('PROJECT_START', this.onStart.bind(this));
         this.runtime.on('PROJECT_RUN_STOP', this.onRunStop.bind(this));
@@ -50,14 +57,17 @@ class Scratch3hackCraft2 {
         this.ssl = urlParams.get('ssl') === 'true' || false;
         this.level = urlParams.get('level') || 0;
 
+        this._initUI();
+
         this.connection = new WebSocketClient(this.host, this.port, this.ssl);
-        this.connection.connect(this.player_id, this.entity_id);
+        this.connection.connect(this.player_id, this.entity_id).then(() => {
+            // Load project for selected entity.
+            this._apiRead();
+        });
 
         document.title = document.title+" {"+this.entity_name+"}";
 
         console.log('constructor');
-
-        this._initUI();
     }
 
     /**
@@ -97,6 +107,7 @@ class Scratch3hackCraft2 {
 
         this._addCSS();
 
+        this.uiMenu = await this._waitForUI('menu-bar_main-menu');
         this.uiHeader = await this._waitForUI('stage-header_stage-size-row');
         this.uiCanvasWrapper = await this._waitForUI('stage-wrapper_stage-canvas-wrapper');
         this.uiCanvasWrapper.classList.add('hackcraft', 'canvas-wrapper');
@@ -104,6 +115,7 @@ class Scratch3hackCraft2 {
         this.uiCanvas = this.uiStageWrapper.getElementsByTagName('canvas')[0];
         // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
+        this._addIsDirtyLabel();
         this._add3dViewToggleButton();
         this._addReloadButton();
         this._addPointerEventsButton();
@@ -120,6 +132,17 @@ class Scratch3hackCraft2 {
         linkElem.setAttribute('href', this.staticUrl+'/hackcraft.css');
 
         document.getElementsByTagName('head')[0].appendChild(linkElem);
+    }
+
+    _addIsDirtyLabel () {
+        const otherItem = this.uiMenu.querySelector('[class^="menu-bar_menu-bar-item"]');
+        
+        const label = document.createElement('span');
+        label.className = `${otherItem.className} hackcraft label isDirty`;
+        label.textContent = '* Modified';
+
+        this.uiIsDirtyLabel = label;
+        this.uiMenu.append(label);
     }
 
     _add3dViewToggleButton () {
@@ -286,6 +309,103 @@ class Scratch3hackCraft2 {
         } else {
             this._forwardEventsToCanvas();
         }
+    }
+
+    _setDirty () {
+        this.isDirty = true;
+        if (this.uiIsDirtyLabel) {
+            this.uiIsDirtyLabel.classList.add('show');
+        }
+    }
+
+    /**
+     * Helper function
+     * @param {Blob} blob Blob
+     * @return {Promise<string>} base64 value
+     */
+    _blobToBase64 (blob) {
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    /**
+     * Helper function
+     * @param {string} dataURI data
+     * @return {Blob} blob value
+     */
+    _dataURItoBlob (dataURI) {
+        // convert base64 to raw binary data held in a string
+        // doesn't handle URLEncoded DataURIs - see SO answer #6850276 for code that does this
+        const byteString = atob(dataURI.split(',')[1]);
+    
+        // separate out the mime component
+        // const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+    
+        // write the bytes of the string to an ArrayBuffer
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+    
+        // write the ArrayBuffer to a blob, and you're done
+        const bb = new Blob([ab]);
+        return bb;
+    }
+
+    async _apiSave (code) {
+        try {
+            await this.sendMessage({
+                type: 'save',
+                data: {
+                    language: 'scratch',
+                    name: 'default',
+                    entity: this.entity_id,
+                    code
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async _apiRead () {
+        try {
+            const ret = await this.sendMessage({
+                type: 'read',
+                data: {
+                    entity: this.entity_id
+                }
+            });
+            const result = JSON.parse(ret);
+            const blob = this._dataURItoBlob(result.data.code);
+            console.warn('THIS A BLOBB', blob);
+            this._loadProject(blob);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    _saveProject () {
+        this.runtime.emit('HACKCRAFT_GET_PROJECT_BLOB', async blob => {
+            const base64 = await this._blobToBase64(blob);
+            this._apiSave(base64);
+            this.isDirty = false;
+            this.uiIsDirtyLabel.classList.remove('show');
+        });
+    }
+
+    async _loadProject (blob) {
+        const buffer = await blob.arrayBuffer();
+        this.runtime.emit('HACKCRAFT_LOAD_PROJECT_BLOB', buffer);
+        // Race-condition with project change event after load.
+        setTimeout(() => {
+            this.isDirty = false;
+            this.uiIsDirtyLabel.classList.remove('show');
+        }, 1000);
     }
 
     getBlocks () {
