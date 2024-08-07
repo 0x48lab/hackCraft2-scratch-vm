@@ -362,7 +362,7 @@ class Scratch3hackCraft2 {
                 type: 'save',
                 data: {
                     language: 'scratch',
-                    name: 'default',
+                    name: 'scratch',
                     entity: this.entity_id,
                     code
                 }
@@ -377,7 +377,8 @@ class Scratch3hackCraft2 {
             const ret = await this.sendMessage({
                 type: 'read',
                 data: {
-                    entity: this.entity_id
+                    entity: this.entity_id,
+                    name: 'scratch'
                 }
             });
             const result = JSON.parse(ret);
@@ -439,19 +440,6 @@ class Scratch3hackCraft2 {
                 },
                 isEdgeActivated: true,
             },{
-                opcode: 'onInteractEvent',
-                blockType: BlockType.HAT,
-                blockIconURI: getIconURI(5, 'normal'),
-                text: translation.onInteractEvent_text[this.locale],
-                level: 5,
-                arguments: {
-                    EVENT: {
-                        type: ArgumentType.STRING,
-                        defaultValue: translation.default_event_text[this.locale],
-                    }
-                },
-                isEdgeActivated: true
-            },{
                 opcode: 'sendEvent',
                 text: translation.sendEvent_text[this.locale],
                 level: 5,
@@ -479,12 +467,6 @@ class Scratch3hackCraft2 {
                 level: 2,
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(2, 'normal'),
-            },{
-                opcode: 'waitForBreakBlock',
-                text: translation.waitForBreakBlock_text[this.locale],
-                level: 4,
-                blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(4, 'normal'),
             },
             {
                 opcode: 'reset',
@@ -1027,19 +1009,6 @@ class Scratch3hackCraft2 {
                     }
                 }
             },{
-                opcode: 'getTargetData',
-                level: 5,
-                blockType: BlockType.REPORTER,
-                blockIconURI: getIconURI(5, 'normal'),
-                text: translation.getTargetData_text[this.locale],
-                arguments: {
-                    TARGET_MENU: {
-                        type: 'string',
-                        defaultValue: 'x',
-                        menu: 'CLICKED_TARGET_MENU_OPTIONS'
-                    }
-                }
-            },{
                 opcode: 'inspect',
                 text: translation.inspect_text[this.locale],
                 level: 4,
@@ -1576,16 +1545,6 @@ class Scratch3hackCraft2 {
 
     }
 
-    onInteractEvent (args, util) {
-        if (this.connection !== null && this.connection !== undefined) {
-            const ret = this.connection.eventChanged[args.EVENT];
-            this.connection.eventChanged[args.EVENT] = false;
-            return ret;
-        }
-        return false;
-
-    }
-
     async waitForRedstone(args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
@@ -1611,23 +1570,6 @@ class Scratch3hackCraft2 {
                 type: 'hook',
                 data: {
                     name: 'onPlayerChat',
-                    }
-            });
-            //const response = JSON.parse(ret);
-            //if (response.data !== "true") this.printLog(spriteId, 'それは壊せなかったよ');
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    async waitForBreakBlock(args, util) {
-        const spriteId = util.target.sprite.spriteId;
-        try {
-            this.connection.eventData['onPlayerBlockBreak'] = undefined;
-            const ret = await this.sendMessage({
-                type: 'hook',
-                data: {
-                    name: 'onPlayerBlockBreak',
                     }
             });
             //const response = JSON.parse(ret);
@@ -2303,37 +2245,6 @@ class Scratch3hackCraft2 {
         return "";
     }
 
-    getTargetData(args, util) {
-        // まず、this.connection.eventData['onCustomEvent']がundefinedかどうかをチェック
-        if(!this.connection || !this.connection.eventData || !this.connection.eventData['onInteractEvent']){
-            // 適切なエラーメッセージを返すか、または0や空文字を返すなどして処理を終了する
-            return 0; // ここは状況に応じて適切な値を返す
-        }
-    
-        if(args.TARGET_MENU == 'world'){
-            if(this.connection.eventData['onInteractEvent'].world === undefined) return "";
-            return this.connection.eventData['onInteractEvent'].world;
-        } else if(args.TARGET_MENU == 'x'){
-            if(this.connection.eventData['onInteractEvent'].x === undefined) return 0;
-            return this.connection.eventData['onInteractEvent'].x;
-        } else if(args.TARGET_MENU == 'y'){
-            if(this.connection.eventData['onInteractEvent'].y === undefined) return 0;
-            return this.connection.eventData['onInteractEvent'].y;
-        } else if(args.TARGET_MENU == 'z'){
-            if(this.connection.eventData['onInteractEvent'].z === undefined) return 0;
-            return this.connection.eventData['onInteractEvent'].z;
-        } else if(args.TARGET_MENU == 'player'){
-            if(this.connection.eventData['onInteractEvent'].player === undefined) return '';
-            return this.connection.eventData['onInteractEvent'].player;
-        } else if(args.TARGET_MENU == 'name'){
-            if(this.connection.eventData['onInteractEvent'].name === undefined) return '';
-            return this.connection.eventData['onInteractEvent'].name;
-        } else if(args.TARGET_MENU == 'type'){
-            if(this.connection.eventData['onInteractEvent'].type === undefined) return '';
-            return this.connection.eventData['onInteractEvent'].type;
-        }
-        return "";
-    }
 
     getBreakBlockData(args, util) {
         // まず、this.connection.eventData['onPlayerBlockBreak']がundefinedかどうかをチェック
@@ -2414,7 +2325,7 @@ class Scratch3hackCraft2 {
                 type: 'call',
                 data: {
                     name: 'teleport',
-                    args: ['', pos.x, pos.y, pos.z]
+                    args: [pos.x, pos.y, pos.z, '']
                     }
             });
             //const response = JSON.parse(ret);

@@ -4,11 +4,6 @@ const translation = {
         'ja-Hira': '[MESSAGE]をうけとったとき',
         'en': 'When you receive a [MESSAGE]',
     },
-    onInteractEvent_text: {
-        'ja': '[EVENT]のアイテムを使った時',
-        'ja-Hira': '[EVENT]のアイテムをつかったとき',
-        'en': 'When an item is used in [EVENT]',
-    },
     sendEvent_text: {
         'ja': '[TARGET]に[MESSAGE]を送る',
         'ja-Hira': '[TARGET]に[MESSAGE]をおくる',
@@ -23,11 +18,6 @@ const translation = {
         'ja': '話しかけられるまで待つ',
         'ja-Hira': 'はなしかけられるまでまつ',
         'en': 'Wait until you are spoken to',
-    },
-    waitForBreakBlock_text: {
-        'ja': 'プレイヤーがブロックを壊すまで待つ',
-        'ja-Hira': 'プレイヤーがブロックをこわすまでまつ',
-        'en': 'Wait until the player breaks the block',
     },
     grabItem_text: {
         'ja': '[SLOT]番のアイテムを持つ',
@@ -175,8 +165,8 @@ const translation = {
         'en': 'Is there a block in [DIR_MENU]?',
     },
     isCanDig_text: {
-        'ja': '[DIR_MENU]のブロックが壊せる？',
-        'ja-Hira': '[DIR_MENU]のブロックがこわせる？',
+        'ja': '[DIR_MENU]のブロックを壊せる？',
+        'ja-Hira': '[DIR_MENU]のブロックをこわせる？',
         'en': 'Can break the [DIR_MENU]?',
     },
     blockColor_text: {
@@ -233,11 +223,6 @@ const translation = {
         'ja': '壊れたブロック[BREAK_BLOCK_MENU]',
         'ja-Hira': 'こわれたブロック[BREAK_BLOCK_MENU]',
         'en': '[BREAK_BLOCK_MENU] of broken block',
-    },
-    getTargetData_text: {
-        'ja': 'クリックした対象の[TARGET_MENU]',
-        'ja-Hira': 'クリックしたたいしょうの[TARGET_MENU]',
-        'en': '[TARGET_MENU] of the clicked target',
     },
     getResult_text: {
         'ja': 'デバッグ情報',
