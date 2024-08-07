@@ -362,7 +362,7 @@ class Scratch3hackCraft2 {
                 type: 'save',
                 data: {
                     language: 'scratch',
-                    name: 'default',
+                    name: 'scratch',
                     entity: this.entity_id,
                     code
                 }
@@ -377,7 +377,8 @@ class Scratch3hackCraft2 {
             const ret = await this.sendMessage({
                 type: 'read',
                 data: {
-                    entity: this.entity_id
+                    entity: this.entity_id,
+                    name: 'scratch'
                 }
             });
             const result = JSON.parse(ret);
