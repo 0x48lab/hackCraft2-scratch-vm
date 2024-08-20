@@ -772,9 +772,9 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'isCanDig',
                 text: translation.isCanDig_text[this.locale],
-                level: 0,
+                level: 1,
                 blockType: BlockType.BOOLEAN,
-                blockIconURI: getIconURI(0, 'normal'),
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
