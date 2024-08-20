@@ -362,7 +362,7 @@ class Scratch3hackCraft2 {
                 type: 'save',
                 data: {
                     language: 'scratch',
-                    name: 'scratch',
+                    name: 'default',
                     entity: this.entity_id,
                     code
                 }
@@ -378,7 +378,8 @@ class Scratch3hackCraft2 {
                 type: 'read',
                 data: {
                     entity: this.entity_id,
-                    name: 'scratch'
+                    language: 'scratch',
+                    name: 'default'
                 }
             });
             const result = JSON.parse(ret);
@@ -771,9 +772,9 @@ class Scratch3hackCraft2 {
             },{
                 opcode: 'isCanDig',
                 text: translation.isCanDig_text[this.locale],
-                level: 0,
+                level: 1,
                 blockType: BlockType.BOOLEAN,
-                blockIconURI: getIconURI(0, 'normal'),
+                blockIconURI: getIconURI(1, 'normal'),
                 arguments: {
                     DIR_MENU: {
                         type: 'string',
