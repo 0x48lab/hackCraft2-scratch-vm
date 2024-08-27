@@ -72,16 +72,27 @@ class Scratch3hackCraft2 {
 
     /**
      * @param {string} className className
+     * @param {string} root root
      * @returns {Promise<Element>} Element
      */
-    _waitForUI (className) {
+    _waitForUI (className, root) {
         return new Promise(resolve => {
-            const checkInterval = setInterval(() => {
-                const element = document.querySelector(`[class^="${className}"]`);
+            let isDone = false;
+            const check = done => {
+                const element = (root ?? document)
+                    .querySelector(`[class^="${className}"]`);
                 if (element) {
                     resolve(element);
-                    clearInterval(checkInterval);
+                    if (done) done();
+                    isDone = true;
                 }
+            };
+            check();
+            if (isDone) return;
+            const checkInterval = setInterval(() => {
+                check(() => {
+                    clearInterval(checkInterval);
+                });
             }, 100);
         });
     }
@@ -102,6 +113,33 @@ class Scratch3hackCraft2 {
         });
     }
 
+    /**
+     * @param {string} selector selector
+     * @param {string} root root
+     * @returns {Promise<Element>} Element
+     */
+    _waitForSelectorUI (selector, root) {
+        return new Promise(resolve => {
+            let isDone = false;
+            const check = done => {
+                const element = (root ?? document)
+                    .querySelector(selector);
+                if (element) {
+                    resolve(element);
+                    if (done) done();
+                    isDone = true;
+                }
+            };
+            check();
+            if (isDone) return;
+            const checkInterval = setInterval(() => {
+                check(() => {
+                    clearInterval(checkInterval);
+                });
+            }, 100);
+        });
+    }
+
     async _initUI () {
         this.display3D = true;
 
@@ -115,6 +153,7 @@ class Scratch3hackCraft2 {
         this.uiCanvas = this.uiStageWrapper.getElementsByTagName('canvas')[0];
         // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
+        this._addSaveNowMenuItem();
         this._addIsDirtyLabel();
         this._add3dViewToggleButton();
         this._addReloadButton();
@@ -132,6 +171,29 @@ class Scratch3hackCraft2 {
         linkElem.setAttribute('href', this.staticUrl+'/hackcraft.css');
 
         document.getElementsByTagName('head')[0].appendChild(linkElem);
+    }
+
+    async _addSaveNowMenuItem () {
+        const fileMenu = await this._waitForSelectorUI('[class^="menu-bar_menu-bar-item_"]:nth-child(3)', this.uiMenu);
+
+        fileMenu.addEventListener('click', () => {
+            // Wait for JS to add submenu.
+            setTimeout(async () => {
+                const subMenu = await this._waitForUI('menu_menu_', fileMenu);
+                const newMenuItem = await this._waitForSelectorUI('[class^="menu_menu-item_"]', subMenu);
+                if (!this.saveNowMenuItem) {
+                    const saveNowItem = newMenuItem.cloneNode(true);
+                    saveNowItem.querySelector('span').textContent = 'Save now';
+                    saveNowItem.addEventListener('click', () => {
+                        this._saveProject();
+                        this.runtime.emit('HACKCRAFT_CLOSE_FILE_MENU');
+                    });
+                    this.saveNowMenuItem = saveNowItem;
+                }
+                newMenuItem.after(this.saveNowMenuItem);
+                console.log('2', fileMenu, subMenu, newMenuItem, this.saveNowMenuItem);
+            }, 0);
+        });
     }
 
     _addIsDirtyLabel () {
