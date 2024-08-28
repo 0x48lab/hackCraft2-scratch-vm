@@ -178,6 +178,14 @@ class VirtualMachine extends EventEmitter {
         this.runtime.on('HACKCRAFT_LOAD_PROJECT_BLOB', blob => {
             this.loadProject(blob);
         });
+
+        this.runtime.on('HACKCRAFT_CLOSE_FILE_MENU', () => {
+            this.closeFileMenuCallback();
+        });
+    }
+
+    setCloseFileMenuCallback (cb) {
+        this.closeFileMenuCallback = cb;
     }
 
     /**
