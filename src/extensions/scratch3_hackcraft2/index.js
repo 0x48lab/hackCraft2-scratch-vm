@@ -2214,6 +2214,7 @@ class Scratch3hackCraft2 {
     }
 
     getChatData (args, util) {
+        console.log("getChatData", this.connection.eventData['onPlayerChat'])
         if(!this.connection || !this.connection.eventData || !this.connection.eventData['onPlayerChat']){
             // 適切なエラーメッセージを返すか、または0や空文字を返すなどして処理を終了する
             return ""; // ここは状況に応じて適切な値を返す
