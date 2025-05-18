@@ -45,9 +45,9 @@ const translation = {
         'en': 'reset',
     },
     move_text: {
-        'ja': '[MOVE_MENU]に１移動',
-        'ja-Hira': '[MOVE_MENU]に１いどう',
-        'en': 'Move 1 [MOVE_MENU]',
+        'ja': '[MOVE_MENU]に移動',
+        'ja-Hira': '[MOVE_MENU]にいどう',
+        'en': 'Move [MOVE_MENU]',
     },
     turn_text: {
         'ja': '[TURN_MENU]方向を向く',
@@ -70,9 +70,9 @@ const translation = {
         'en': 'Use items in [DIR_MENU]',
     },
     action_text: {
-        'ja': '[DIR_MENU]の装置を動かす',
-        'ja-Hira': '[DIR_MENU]のそうちをうごかす',
-        'en': 'Activate the [DIR_MENU] device',
+        'ja': '[DIR_MENU]の装置を操作する',
+        'ja-Hira': '[DIR_MENU]のそうちをそうさする',
+        'en': 'Operate device in [DIR_MENU]',
     },
     putToChest_text: {
         'ja': '[DIR_MENU]にアイテムを入れる',
@@ -180,28 +180,28 @@ const translation = {
         'en': 'Distance to [TARGET]',
     },
     teleport_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標へ移動',
-        'ja-Hira': '[COORDINATE][X][Y][Z]ざひょうへてんそう',
-        'en': 'Teleport to [COORDINATE][X][Y][Z]',
+        'ja': '[COORDINATE]に移動',
+        'ja-Hira': '[COORDINATE]にいどう',
+        'en': 'Move to [COORDINATE]',
     },
     lookAtPosition_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標を見る',
-        'ja-Hira': '[COORDINATE][X][Y][Z]ざひょうをみる',
-        'en': 'Look at [COORDINATE][X][Y][Z]',
+        'ja': '[COORDINATE]を向く',
+        'ja-Hira': '[COORDINATE]をむく',
+        'en': 'Look at [COORDINATE]',
     },
     placeX_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標に[SIDE_MENU]で置く',
-        'ja-Hira': '[COORDINATE][X][Y][Z]のいちに[SIDE_MENU]でおく',
-        'en': 'Set block at [COORDINATE][X][Y][Z] by [SIDE_MENU]',
+        'ja': '[COORDINATE]に[SIDE_MENU]で置く',
+        'ja-Hira': '[COORDINATE]に[SIDE_MENU]でおく',
+        'en': 'Set block at [COORDINATE] by [SIDE_MENU]',
     },
     digX_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標を壊す',
-        'ja-Hira': '[COORDINATE][X][Y][Z]にあるものをこわす',
-        'en': 'Dig at [COORDINATE][X][Y][Z]',
+        'ja': '[COORDINATE]を壊す',
+        'ja-Hira': '[COORDINATE]をこわす',
+        'en': 'Dig at [COORDINATE]',
     },
     useItemX_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標に使う',
-        'ja-Hira': '[COORDINATE][X][Y][Z]のいちにつかう',
+        'ja': '[COORDINATE]にアイテムを使う',
+        'ja-Hira': '[COORDINATE]にアイテムをつかう',
         'en': 'Use item at [COORDINATE][X][Y][Z]',
     },
     addForce_text: {
@@ -229,15 +229,20 @@ const translation = {
         'ja-Hira': 'デバッグじょうほう',
         'en': 'debug information',
     },
+    cordinate_text: {
+        'ja': '座標[COORDINATE][X][Y][Z]',
+        'ja-Hira': 'ざひょう[COORDINATE][X][Y][Z]',
+        'en': 'Coordinate [COORDINATE][X][Y][Z]',
+    },
     inspect_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標のブロック',
-        'ja-Hira': '[COORDINATE][X][Y][Z]にあるブロック',
-        'en': 'The block at [COORDINATE][X][Y][Z]',
+        'ja': '[COORDINATE]座標のブロック',
+        'ja-Hira': '[COORDINATE]にあるブロック',
+        'en': 'The block at [COORDINATE]',
     },
     distanceTo_text: {
-        'ja': '[COORDINATE][X][Y][Z]座標までの距離',
-        'ja-Hira': '[COORDINATE][X][Y][Z]ざひょうまでのきょり',
-        'en': 'Distance to [COORDINATE][X][Y][Z]',
+        'ja': '[COORDINATE]までの距離',
+        'ja-Hira': '[COORDINATE]までのきょり',
+        'en': 'Distance to [COORDINATE]',
     },
     chatGPT_text: {
         'ja': 'AIに[TEXT]と聞く',
@@ -273,6 +278,16 @@ const translation = {
         'ja': '下',
         'ja-Hira': 'した',
         'en': 'Down',
+    },
+    mnu_front_up_text: {
+        'ja': '前上',
+        'ja-Hira': 'まえうえ',
+        'en': 'Front Up',
+    },
+    mnu_front_down_text: {
+        'ja': '前下',
+        'ja-Hira': 'まえした',
+        'en': 'Front Down',
     },
     mnu_left_text: {
         'ja': '左',
@@ -448,6 +463,21 @@ const translation = {
         'ja': '後ろ向き',
         'ja-Hira': 'うしろむき',
         'en': 'Back',
+    },
+    mnu_world_text: {
+        'ja': 'w',
+        'ja-Hira': 'w',
+        'en': 'w',
+    },
+    mnu_relative_text: {
+        'ja': '~',
+        'ja-Hira': '~',
+        'en': '~',
+    },
+    mnu_local_text: {
+        'ja': '^',
+        'ja-Hira': '^',
+        'en': '^',
     },
 };
 const localse = ['en', 'ja', 'ja-Hira'];

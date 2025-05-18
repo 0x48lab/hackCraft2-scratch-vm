@@ -72,27 +72,22 @@ class Scratch3hackCraft2 {
 
     /**
      * @param {string} className className
-     * @param {string} root root
      * @returns {Promise<Element>} Element
      */
-    _waitForUI (className, root) {
-        return new Promise(resolve => {
-            let isDone = false;
-            const check = done => {
-                const element = (root ?? document)
-                    .querySelector(`[class^="${className}"]`);
-                if (element) {
-                    resolve(element);
-                    if (done) done();
-                    isDone = true;
-                }
-            };
-            check();
-            if (isDone) return;
+    _waitForUI (className) {
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                clearInterval(checkInterval);
+                reject(new Error('UI element not found'));
+            }, 5000); // タイムアウトを設定
+
             const checkInterval = setInterval(() => {
-                check(() => {
+                const element = document.querySelector(`[class^="${className}"]`);
+                if (element) {
+                    clearTimeout(timeout);
                     clearInterval(checkInterval);
-                });
+                    resolve(element);
+                }
             }, 100);
         });
     }
@@ -113,33 +108,6 @@ class Scratch3hackCraft2 {
         });
     }
 
-    /**
-     * @param {string} selector selector
-     * @param {string} root root
-     * @returns {Promise<Element>} Element
-     */
-    _waitForSelectorUI (selector, root) {
-        return new Promise(resolve => {
-            let isDone = false;
-            const check = done => {
-                const element = (root ?? document)
-                    .querySelector(selector);
-                if (element) {
-                    resolve(element);
-                    if (done) done();
-                    isDone = true;
-                }
-            };
-            check();
-            if (isDone) return;
-            const checkInterval = setInterval(() => {
-                check(() => {
-                    clearInterval(checkInterval);
-                });
-            }, 100);
-        });
-    }
-
     async _initUI () {
         this.display3D = true;
 
@@ -153,7 +121,6 @@ class Scratch3hackCraft2 {
         this.uiCanvas = this.uiStageWrapper.getElementsByTagName('canvas')[0];
         // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
-        this._addSaveNowMenuItem();
         this._addIsDirtyLabel();
         this._add3dViewToggleButton();
         this._addReloadButton();
@@ -171,29 +138,6 @@ class Scratch3hackCraft2 {
         linkElem.setAttribute('href', this.staticUrl+'/hackcraft.css');
 
         document.getElementsByTagName('head')[0].appendChild(linkElem);
-    }
-
-    async _addSaveNowMenuItem () {
-        const fileMenu = await this._waitForSelectorUI('[class^="menu-bar_menu-bar-item_"]:nth-child(3)', this.uiMenu);
-
-        fileMenu.addEventListener('click', () => {
-            // Wait for JS to add submenu.
-            setTimeout(async () => {
-                const subMenu = await this._waitForUI('menu_menu_', fileMenu);
-                const newMenuItem = await this._waitForSelectorUI('[class^="menu_menu-item_"]', subMenu);
-                if (!this.saveNowMenuItem) {
-                    const saveNowItem = newMenuItem.cloneNode(true);
-                    saveNowItem.querySelector('span').textContent = 'Save now';
-                    saveNowItem.addEventListener('click', () => {
-                        this._saveProject();
-                        this.runtime.emit('HACKCRAFT_CLOSE_FILE_MENU');
-                    });
-                    this.saveNowMenuItem = saveNowItem;
-                }
-                newMenuItem.after(this.saveNowMenuItem);
-                console.log('2', fileMenu, subMenu, newMenuItem, this.saveNowMenuItem);
-            }, 0);
-        });
     }
 
     _addIsDirtyLabel () {
@@ -475,20 +419,6 @@ class Scratch3hackCraft2 {
     getBlocks () {
         this.locale = this.setLocale();
         return [
-            /*{
-                opcode: 'setRenderView',
-                text: translation.render_view_text[this.locale],
-                level: 1,
-                blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
-                arguments: {
-                    FLAG: {
-                        type: 'string',
-                        defaultValue: 'on',
-                        menu: 'FLAG_MENU_OPTIONS'
-                    }
-                }
-            },*/
             {
                 opcode: 'onEntityCustomEvent',
                 blockType: BlockType.HAT,
@@ -547,7 +477,8 @@ class Scratch3hackCraft2 {
                 arguments: {
                     SLOT: {
                         type: ArgumentType.NUMBER,
-                        defaultValue: 0                    }
+                        defaultValue: 0
+                    }
                 }
             },{
                 opcode: 'passItem',
@@ -591,11 +522,12 @@ class Scratch3hackCraft2 {
                 arguments: {
                     MOVE_MENU: {
                         type: 'string',
-                        defaultValue: 'forward',
+                        defaultValue: 'Front',
                         menu: 'MOVE_MENU_OPTIONS'
                     }
                 }
-            },{
+            },
+            {
                 opcode: 'turn',
                 text: translation.turn_text[this.locale],
                 level: 0,
@@ -883,10 +815,10 @@ class Scratch3hackCraft2 {
             
             //高度なブロック
             {
-                opcode: 'teleport',
-                text: translation.teleport_text[this.locale],
+                opcode: 'cordinate',
+                text: translation.cordinate_text[this.locale],
                 level: 4,
-                blockType: BlockType.COMMAND,
+                blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
@@ -905,6 +837,19 @@ class Scratch3hackCraft2 {
                     Z: {
                         type: ArgumentType.NUMBER,
                         defaultValue: '0'
+                    }
+                }
+            },
+            {
+                opcode: 'teleport',
+                text: translation.teleport_text[this.locale],
+                level: 4,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(4, 'normal'),
+                arguments: {
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -914,22 +859,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -939,22 +871,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     },
                     SIDE_MENU: {
                         type: 'string',
@@ -969,22 +888,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -994,22 +900,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -1071,54 +964,30 @@ class Scratch3hackCraft2 {
                         menu: 'BLOCK_INFO_MENU_OPTIONS'
                     }
                 }
-            },{
+            },
+            {
                 opcode: 'inspect',
                 text: translation.inspect_text[this.locale],
                 level: 4,
                 blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
-            },{
+            },
+            {
                 opcode: 'distanceTo',
                 text: translation.distanceTo_text[this.locale],
                 level: 4,
                 blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -1206,27 +1075,27 @@ class Scratch3hackCraft2 {
                 MOVE_MENU_OPTIONS: [
                     {
                         text: translation.mnu_front_text[this.locale],
-                        value: 'forward'
+                        value: 'Front'
                     },
                     {
                         text: translation.mnu_back_text[this.locale],
-                        value: 'back'
+                        value: 'Back'
                     },
                     {
                         text: translation.mnu_up_text[this.locale],
-                        value: 'up'
+                        value: 'Up'
                     },
                     {
                         text: translation.mnu_down_text[this.locale],
-                        value: 'down'
+                        value: 'Down'
                     },
                     {
-                        text: translation.mnu_right_text[this.locale],
-                        value: 'stepRight'
+                        text: translation.mnu_front_up_text[this.locale],
+                        value: 'FrontUp'
                     },
                     {
-                        text: translation.mnu_left_text[this.locale],
-                        value: 'stepLeft'
+                        text: translation.mnu_front_down_text[this.locale],
+                        value: 'FrontDown'
                     }
                 ],
                 TURN_MENU_OPTIONS: [
@@ -1255,6 +1124,14 @@ class Scratch3hackCraft2 {
                     {
                         text: translation.mnu_down_text[this.locale],
                         value: 'Down'
+                    },
+                    {
+                        text: translation.mnu_front_up_text[this.locale],
+                        value: 'FrontUp'
+                    },
+                    {
+                        text: translation.mnu_front_down_text[this.locale],
+                        value: 'FrontDown'
                     }
                 ],
                 SIDE_MENU_OPTIONS: [
@@ -1359,15 +1236,15 @@ class Scratch3hackCraft2 {
                 ],
                 COORDINATE_SYSTEM_OPTIONS: [
                     {
-                        text: '',
+                        text: translation.mnu_world_text[this.locale],
                         value: ''
                     },
                     {
-                        text: '~',
+                        text: translation.mnu_relative_text[this.locale],
                         value: '~'
                     },
                     {
-                        text: '^',
+                        text: translation.mnu_local_text[this.locale],
                         value: '^'
                     }
                 ],
@@ -1730,13 +1607,49 @@ class Scratch3hackCraft2 {
         }
     }
 
+    getDirectionVector (direction) {
+        let x = 0, y = 0, z = 0;
+        switch (direction) {
+            case 'Front':
+                z = 1;
+                break;
+            case 'Back':
+                z = -1;
+                break;
+            case 'Up':
+                y = 1;
+                break;
+            case 'Down':
+                y = -1;
+                break;
+            case 'Left':
+                x = -1;
+                break;
+            case 'Right':
+                x = 1;
+                break;
+            case 'FrontUp':
+                y = 1;
+                z = 1
+                break;
+            case 'FrontDown':
+                y = -1;
+                z = 1
+                break;
+            }
+        return { x, y, z };
+    }
+
     async move (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const { x, y, z } = this.getDirectionVector(args.MOVE_MENU);
+            console.log("move x=", args.MOVE_MENU, x, "y=", y, "z=", z);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: args.MOVE_MENU
+                    name: 'teleport',
+                    args: [x, y, z, "^"]
                 }
             });
             const response = JSON.parse(ret);
@@ -1793,11 +1706,12 @@ class Scratch3hackCraft2 {
     async digX (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'digX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -1810,11 +1724,12 @@ class Scratch3hackCraft2 {
     async useItemX (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'useItemX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -1827,15 +1742,16 @@ class Scratch3hackCraft2 {
     async teleport (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'teleport',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
-                    }
+                    args: [x, y, z, coordinate]
+                }
             });
-            //const response = JSON.parse(ret);
-            //if (response.data !== "true") this.printLog(spriteId, 'なにかにぶつかったよ');
+            const response = JSON.parse(ret);
+            if (response.data !== "true") this.printLog(spriteId, 'なにかにぶつかったよ');
         } catch (error) {
             console.error(error);
         }
@@ -1989,12 +1905,13 @@ class Scratch3hackCraft2 {
     async place (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `place${args.DIR_MENU}`,
-                    args: [args.SIDE_MENU]
-                }
+                    name: 'placeX',
+                    args: [x, y, z, "^", args.SIDE_MENU]
+                    }
             });
             const response = JSON.parse(ret);
             if (response.data !== "true") this.printLog(spriteId, 'そこにおけなかったよ');
@@ -2006,11 +1923,12 @@ class Scratch3hackCraft2 {
     async lookAtPosition (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'lookAtPosition',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                     }
             });
             const response = JSON.parse(ret);
@@ -2023,11 +1941,12 @@ class Scratch3hackCraft2 {
     async placeX (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'placeX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE, args.SIDE_MENU]
+                    args: [x, y, z, coordinate, args.SIDE_MENU]
                     }
             });
             const response = JSON.parse(ret);
@@ -2087,15 +2006,20 @@ class Scratch3hackCraft2 {
         }
     }
 
+    cordinate (args, util) {
+        const spriteId = util.target.sprite.spriteId;
+        return [args.X, args.Y, args.Z, args.COORDINATE]
+    }
 
     async inspect (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'inspect',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -2114,11 +2038,12 @@ class Scratch3hackCraft2 {
     async distanceTo (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'distance',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -2131,10 +2056,12 @@ class Scratch3hackCraft2 {
     async action (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `action${args.DIR_MENU}`
+                    name: `actionX`,
+                    args: [x, y, z, "^"]
                 }
             });
             //const response = JSON.parse(ret);
@@ -2147,10 +2074,12 @@ class Scratch3hackCraft2 {
     async useItem (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `useItem${args.DIR_MENU}`
+                    name: `useItemX`,
+                    args: [x, y, z, "^"]
                 }
             });
             const response = JSON.parse(ret);
@@ -2163,10 +2092,12 @@ class Scratch3hackCraft2 {
     async dig (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `dig${args.DIR_MENU}`
+                    name: `digX`,
+                    args: [x, y, z, "^"]
                 }
             });
             const response = JSON.parse(ret);
@@ -2179,10 +2110,12 @@ class Scratch3hackCraft2 {
     async putToChest (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `putToChest${args.DIR_MENU}`
+                    name: `putToChestX`,
+                    args: [x, y, z, "^"]
                 }
             });
             //const response = JSON.parse(ret);
@@ -2195,10 +2128,12 @@ class Scratch3hackCraft2 {
     async takeFromChest (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `takeFromChest${args.DIR_MENU}`
+                    name: `takeFromChestX`,
+                    args: [x, y, z, "^"]
                 }
             });
             //const response = JSON.parse(ret);
@@ -2228,17 +2163,19 @@ class Scratch3hackCraft2 {
     async isBlocked (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const { x, y, z } = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `isBlocked${args.DIR_MENU}`
+                    name: 'isBlockedAt',
+                    args: [x, y, z, "^"]
                 }
             });
             const response = JSON.parse(ret);
-            console.log("isBlocked response=", response.data);
-            return response.data == 'true';
+            return response.data === "true";
         } catch (error) {
             console.error(error);
+            return false;
         }
     }
 
