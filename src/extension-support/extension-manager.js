@@ -98,6 +98,13 @@ class ExtensionManager {
         dispatch.setService('extensions', this).catch(e => {
             log.error(`ExtensionManager was unable to register extension service: ${JSON.stringify(e)}`);
         });
+
+        // Initialize hackCraft2 extension after runtime is fully initialized
+        this.runtime.on('RUNTIME_STARTED', () => {
+            if (!this.isExtensionLoaded('hackcraft2')) {
+                this.loadExtensionIdSync('hackcraft2');
+            }
+        });
     }
 
     /**

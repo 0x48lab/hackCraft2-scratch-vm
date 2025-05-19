@@ -56,6 +56,12 @@ class VirtualMachine extends EventEmitter {
         });
 
         /**
+         * Extension manager to handle loading and managing extensions
+         * @type {ExtensionManager}
+         */
+        this.extensionManager = new ExtensionManager(this.runtime);
+
+        /**
          * The "currently editing"/selected target ID for the VM.
          * Block events from any Blockly workspace are routed to this target.
          * @type {Target}
@@ -148,13 +154,15 @@ class VirtualMachine extends EventEmitter {
             this.emit(Runtime.MIC_LISTENING, listening);
         });
         this.runtime.on(Runtime.RUNTIME_STARTED, () => {
+            // Load hackCraft2 extension after runtime is fully initialized
+            if (!this.extensionManager.isExtensionLoaded('hackcraft2')) {
+                this.extensionManager.loadExtensionIdSync('hackcraft2');
+            }
             this.emit(Runtime.RUNTIME_STARTED);
         });
         this.runtime.on(Runtime.HAS_CLOUD_DATA_UPDATE, hasCloudData => {
             this.emit(Runtime.HAS_CLOUD_DATA_UPDATE, hasCloudData);
         });
-
-        this.extensionManager = new ExtensionManager(this.runtime);
 
         // Load core extensions
         for (const id of CORE_EXTENSIONS) {
@@ -165,27 +173,6 @@ class VirtualMachine extends EventEmitter {
         this.flyoutBlockListener = this.flyoutBlockListener.bind(this);
         this.monitorBlockListener = this.monitorBlockListener.bind(this);
         this.variableListener = this.variableListener.bind(this);
-
-        this.initHackCraftExtension();
-    }
-
-    initHackCraftExtension () {
-        this.runtime.on('HACKCRAFT_GET_PROJECT_BLOB', async callback => {
-            const blob = await this.saveProjectSb3();
-            callback(blob);
-        });
-
-        this.runtime.on('HACKCRAFT_LOAD_PROJECT_BLOB', blob => {
-            this.loadProject(blob);
-        });
-
-        this.runtime.on('HACKCRAFT_CLOSE_FILE_MENU', () => {
-            this.closeFileMenuCallback();
-        });
-    }
-
-    setCloseFileMenuCallback (cb) {
-        this.closeFileMenuCallback = cb;
     }
 
     /**
@@ -193,6 +180,7 @@ class VirtualMachine extends EventEmitter {
      */
     start () {
         this.runtime.start();
+        this.emit('RUNTIME_STARTED');
     }
 
     /**
