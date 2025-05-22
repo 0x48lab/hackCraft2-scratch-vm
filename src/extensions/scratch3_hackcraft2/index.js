@@ -1090,12 +1090,12 @@ class Scratch3hackCraft2 {
                         value: 'Down'
                     },
                     {
-                        text: translation.mnu_front_up_text[this.locale],
-                        value: 'FrontUp'
+                        text: translation.mnu_left_text[this.locale],
+                        value: 'StepLeft'
                     },
                     {
-                        text: translation.mnu_front_down_text[this.locale],
-                        value: 'FrontDown'
+                        text: translation.mnu_right_text[this.locale],
+                        value: 'StepRight'
                     }
                 ],
                 TURN_MENU_OPTIONS: [
@@ -1593,7 +1593,7 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async reset(args, util) {
+    async reset (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
             const ret = await this.sendMessage({
@@ -1643,13 +1643,36 @@ class Scratch3hackCraft2 {
     async move (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
-            const { x, y, z } = this.getDirectionVector(args.MOVE_MENU);
-            console.log("move x=", args.MOVE_MENU, x, "y=", y, "z=", z);
+            let moveCommand;
+            switch (args.MOVE_MENU) {
+                case 'Front':
+                    moveCommand = 'forward';
+                    break;
+                case 'Back':
+                    moveCommand = 'back';
+                    break;
+                case 'Up':
+                    moveCommand = 'up';
+                    break;
+                case 'Down':
+                    moveCommand = 'down';
+                    break;
+                case 'StepLeft':
+                    moveCommand = 'stepLeft';
+                    break;
+                case 'StepRight':
+                    moveCommand = 'stepRight';
+                    break;
+                default:
+                    console.error('Invalid move direction:', args.MOVE_MENU);
+                    return;
+            }
+
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: 'teleport',
-                    args: [x, y, z, "^"]
+                    name: moveCommand,
+                    args: [1]
                 }
             });
             const response = JSON.parse(ret);
