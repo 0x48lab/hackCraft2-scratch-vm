@@ -2115,13 +2115,43 @@ class Scratch3hackCraft2 {
     async dig (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
-            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
+            let data;
+            switch (args.DIR_MENU) {
+                case 'Front':
+                    data = {
+                        name: "digFront",
+                    }
+                    break;
+                case 'Up':
+                    data = {
+                        name: "digUp",
+                    }
+                    break;
+                case 'Down':
+                    data = {
+                        name: "digDown",
+                    }
+                    break;
+                case 'FrontUp':
+                    data = {
+                        name: "digX",
+                        args: [0, 1, 1, "^"]
+                    }
+                    break;
+                case 'FrontUp':
+                    data = {
+                        name: "digX",
+                        args: [0, -1, 1, "^"]
+                    }
+                    break;
+                default:
+                    console.error('Invalid move direction:', args.MOVE_MENU);
+                    return;
+            }
+
             const ret = await this.sendMessage({
                 type: 'call',
-                data: {
-                    name: `digX`,
-                    args: [x, y, z, "^"]
-                }
+                data: data
             });
             const response = JSON.parse(ret);
             if (response.data !== "true") this.printLog(spriteId, 'それは壊せなかったよ');
