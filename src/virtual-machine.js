@@ -51,6 +51,8 @@ class VirtualMachine extends EventEmitter {
          * @type {!Runtime}
          */
         this.runtime = new Runtime();
+        // Set vm reference in runtime for extensions to access
+        this.runtime._vm = this;
         centralDispatch.setService('runtime', this.runtime).catch(e => {
             log.error(`Failed to register runtime service: ${JSON.stringify(e)}`);
         });
@@ -154,9 +156,14 @@ class VirtualMachine extends EventEmitter {
             this.emit(Runtime.MIC_LISTENING, listening);
         });
         this.runtime.on(Runtime.RUNTIME_STARTED, () => {
+            console.log('[VM_RUNTIME_STARTED] RUNTIME_STARTED event received');
             // Load hackCraft2 extension after runtime is fully initialized
             if (!this.extensionManager.isExtensionLoaded('hackcraft2')) {
+                console.log('[VM_EXTENSION_LOAD] Loading hackcraft2 extension...');
                 this.extensionManager.loadExtensionIdSync('hackcraft2');
+                console.log('[VM_EXTENSION_LOAD] hackcraft2 extension loaded');
+            } else {
+                console.log('[VM_EXTENSION_LOAD] hackcraft2 extension already loaded');
             }
             this.emit(Runtime.RUNTIME_STARTED);
         });

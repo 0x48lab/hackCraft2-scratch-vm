@@ -29,8 +29,14 @@ class Scratch3hackCraft2 {
     
     
     constructor (runtime) {
-        console.log('Scratch3hackCraft2');
         this.runtime = runtime;
+        // Get vm instance from runtime's parent
+        this.vm = runtime.parent || runtime._vm;
+        if (!this.vm) {
+            console.warn('[HACKCRAFT2] VirtualMachine instance not found in runtime');
+        }
+        console.log('Scratch3hackCraft2');
+
         this.locale = this.setLocale();
 
         // 最後のスラッシュを除去したパスを基に、ルート相対の静的パスを生成
@@ -388,17 +394,34 @@ class Scratch3hackCraft2 {
                     name: 'default'
                 }
             });
-            const result = JSON.parse(ret);
+            let result;
+            try {
+                result = JSON.parse(ret);
+            } catch (e) {
+                console.warn('Invalid JSON response from server:', ret);
+                // サーバーからの応答がJSONでない場合、デフォルトのプロジェクトデータを使用
+                result = {
+                    data: {
+                        code: 'data:application/x.scratch.sb3;base64,UEsDBAoAAAAAAIAwhVYAAAAAAAAAAAAAAAAFAAAAcHJvamVjdC5qc29uUEsBAhQACgAAAAAAgDCFVgAAAAAAAAAAAAAAAAUAAAAAAAAAAAAgAAAAAAAAAHByb2plY3QuanNvblBLBQYAAAAAAQABADYAAAA0AAAAAAA='
+                    }
+                };
+            }
+            if (!result.data || !result.data.code) {
+                throw new Error('Invalid project data format');
+            }
             const blob = this._dataURItoBlob(result.data.code);
-            console.warn('THIS A BLOBB', blob);
-            this._loadProject(blob);
+            console.log('Loading project from blob:', blob);
+            await this._loadProject(blob);
         } catch (error) {
-            console.error(error);
+            console.error('Error in _apiRead:', error);
         }
     }
 
     _saveProject () {
-        this.runtime.emit('HACKCRAFT_GET_PROJECT_BLOB', async blob => {
+        if (!this.vm || typeof this.vm.saveProjectSb3 !== 'function') {
+            throw new Error('VirtualMachineインスタンス(vm)が必要です');
+        }
+        this.vm.saveProjectSb3().then(async blob => {
             const base64 = await this._blobToBase64(blob);
             this._apiSave(base64);
             this.isDirty = false;
@@ -407,9 +430,11 @@ class Scratch3hackCraft2 {
     }
 
     async _loadProject (blob) {
-        const buffer = await blob.arrayBuffer();
-        this.runtime.emit('HACKCRAFT_LOAD_PROJECT_BLOB', buffer);
-        // Race-condition with project change event after load.
+        if (!this.vm || typeof this.vm.loadProject !== 'function') {
+            throw new Error('VirtualMachineインスタンス(vm)が必要です');
+        }
+        const arrayBuffer = await blob.arrayBuffer();
+        await this.vm.loadProject(arrayBuffer);
         setTimeout(() => {
             this.isDirty = false;
             this.uiIsDirtyLabel.classList.remove('show');

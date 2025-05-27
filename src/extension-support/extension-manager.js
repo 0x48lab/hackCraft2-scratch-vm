@@ -95,6 +95,11 @@ class ExtensionManager {
          */
         this.runtime = runtime;
 
+        // Store vm reference in runtime for extensions to access
+        if (runtime && !runtime._vm) {
+            runtime._vm = runtime.parent;
+        }
+
         dispatch.setService('extensions', this).catch(e => {
             log.error(`ExtensionManager was unable to register extension service: ${JSON.stringify(e)}`);
         });
@@ -124,22 +129,25 @@ class ExtensionManager {
      * @param {string} extensionId - the ID of an internal extension
      */
     loadExtensionIdSync (extensionId) {
+        console.log(`[EXT_MANAGER_LOAD] Attempting to load extension: ${extensionId}`);
         if (!Object.prototype.hasOwnProperty.call(builtinExtensions, extensionId)) {
-            log.warn(`Could not find extension ${extensionId} in the built in extensions.`);
+            console.warn(`[EXT_MANAGER_ERROR] Could not find extension ${extensionId} in the built in extensions.`);
             return;
         }
 
-        /** @TODO dupe handling for non-builtin extensions. See commit 670e51d33580e8a2e852b3b038bb3afc282f81b9 */
         if (this.isExtensionLoaded(extensionId)) {
-            const message = `Rejecting attempt to load a second extension with ID ${extensionId}`;
-            log.warn(message);
+            const message = `[EXT_MANAGER_WARN] Rejecting attempt to load a second extension with ID ${extensionId}`;
+            console.warn(message);
             return;
         }
 
+        console.log(`[EXT_MANAGER_INSTANCE] Creating instance of extension: ${extensionId}`);
         const extension = builtinExtensions[extensionId]();
+        console.log(`[EXT_MANAGER_REGISTER] Registering extension instance: ${extensionId}`);
         const extensionInstance = new extension(this.runtime);
         const serviceName = this._registerInternalExtension(extensionInstance);
         this._loadedExtensions.set(extensionId, serviceName);
+        console.log(`[EXT_MANAGER_SUCCESS] Extension ${extensionId} loaded successfully with service name: ${serviceName}`);
     }
 
     /**
