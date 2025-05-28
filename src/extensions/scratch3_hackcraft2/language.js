@@ -479,6 +479,11 @@ const translation = {
         'ja-Hira': '^',
         'en': '^',
     },
+    mnu_save_text: {
+        'ja': '* 直ちに保存',
+        'ja-Hira': '* ただちにほぞん',
+        'en': '* Save Now',
+    },
 };
 const localse = ['en', 'ja', 'ja-Hira'];
 
