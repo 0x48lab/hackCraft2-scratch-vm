@@ -482,13 +482,9 @@ class Scratch3hackCraft2 {
                 item.style.padding = '8px';
                 item.style.cursor = 'pointer';
                 item.style.borderBottom = '1px solid #eee';
-                item.textContent = typeof projectName === 'string' ? projectName : projectName.name;
+                item.textContent = projectName;
                 item.onclick = async () => {
-                    const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
-                    if (titleInput) {
-                        titleInput.value = typeof projectName === 'string' ? projectName : projectName.name;
-                    }
-                    await this._apiRead(typeof projectName === 'string' ? projectName : projectName.name);
+                    await this._apiRead(projectName);
                     document.body.removeChild(dialog);
                 };
                 listElement.appendChild(item);
