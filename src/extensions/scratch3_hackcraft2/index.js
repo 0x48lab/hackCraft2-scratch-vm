@@ -475,6 +475,20 @@ class Scratch3hackCraft2 {
         }, 1000);
     }
 
+    getSaveToServerHandler() {
+        console.log('**** getSaveToServerHandler');
+        return () => {
+            this._saveProject();
+        };
+    }
+
+    getLoadFromServerHandler() {    
+        console.log('**** getLoadFromServerHandler');
+        return () => {
+            this._apiRead();
+        };
+    }
+
     getBlocks () {
         this.locale = this.setLocale();
         return [

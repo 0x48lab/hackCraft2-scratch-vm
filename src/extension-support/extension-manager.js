@@ -451,6 +451,19 @@ class ExtensionManager {
 
         return blockInfo;
     }
+
+    /**
+     * Get an extension instance by its ID
+     * @param {string} extensionId - the ID of the extension to get
+     * @returns {object|null} the extension instance or null if not found
+     */
+    getExtension (extensionId) {
+        if (!this.isExtensionLoaded(extensionId)) {
+            return null;
+        }
+        const serviceName = this._loadedExtensions.get(extensionId);
+        return dispatch.services[serviceName] || null;
+    }
 }
 
 module.exports = ExtensionManager;
