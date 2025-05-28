@@ -395,11 +395,16 @@ class Scratch3hackCraft2 {
 
     async _apiSave (code) {
         try {
+            // Get project title from DOM input element
+            const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
+            const projectName = titleInput ? titleInput.value : 'default';
+            console.log('**** _apiSave project name from DOM:', projectName);
+            
             await this.sendMessage({
                 type: 'save',
                 data: {
                     language: 'scratch',
-                    name: 'default',
+                    name: projectName,
                     entity: this.entity_id,
                     code
                 }
@@ -411,12 +416,16 @@ class Scratch3hackCraft2 {
 
     async _apiRead () {
         try {
+            const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
+            const projectName = titleInput ? titleInput.value : 'default';
+            console.log('**** _apiRead project name from DOM:', projectName);
+
             const ret = await this.sendMessage({
                 type: 'read',
                 data: {
-                    entity: this.entity_id,
                     language: 'scratch',
-                    name: 'default'
+                    name: projectName,
+                    entity: this.entity_id,
                 }
             });
             let result;
