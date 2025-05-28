@@ -484,6 +484,36 @@ const translation = {
         'ja-Hira': '* ただちにほぞん',
         'en': '* Save now',
     },
+    mnu_load_from_server_text: {
+        'ja': 'サーバーから読み込む',
+        'ja-Hira': 'サーバーからよみこむ',
+        'en': 'Load from Server',
+    },
+    mnu_cancel_text: {
+        'ja': 'キャンセル',
+        'ja-Hira': 'キャンセル',
+        'en': 'Cancel',
+    },
+    project_selector_text: {
+        'ja': 'プロジェクトを選択',
+        'ja-Hira': 'プロジェクトをせんたく',
+        'en': 'Select Project',
+    },
+    project_list_empty_text: {
+        'ja': 'プロジェクトがありません',
+        'ja-Hira': 'プロジェクトがありません',
+        'en': 'No projects available',
+    },
+    project_load_error_text: {
+        'ja': 'プロジェクトの読み込みに失敗しました',
+        'ja-Hira': 'プロジェクトのよみこみにしっぱいしました',
+        'en': 'Failed to load project',
+    },
+    project_list_error_text: {
+        'ja': 'プロジェクト一覧の取得に失敗しました',
+        'ja-Hira': 'プロジェクトいちらんのとりにしっぱいしました',
+        'en': 'Failed to get project list',
+    }
 };
 const localse = ['en', 'ja', 'ja-Hira'];
 

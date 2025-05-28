@@ -78,7 +78,10 @@ class Scratch3hackCraft2 {
         this.connection = new WebSocketClient(this.host, this.port, this.ssl);
         this.connection.connect(this.player_id, this.entity_id).then(() => {
             // Load project for selected entity.
-            this._apiRead();
+            const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
+            const projectName = titleInput ? titleInput.value : 'default';
+            console.log('**** _apiRead project name from DOM:', projectName);
+            this._apiRead(projectName);
         });
 
         document.title = document.title+" {"+this.entity_name+"}";
@@ -414,11 +417,104 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async _apiRead () {
+    async _apiList() {
         try {
-            const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
-            const projectName = titleInput ? titleInput.value : 'default';
-            console.log('**** _apiRead project name from DOM:', projectName);
+            const ret = await this.sendMessage({
+                type: 'list',
+                data: {
+                    language: 'scratch',
+                    entity: this.entity_id,
+                }
+            });
+            console.log('Server response:', ret);
+
+            let result;
+            try {
+                result = JSON.parse(ret);
+                console.log('Parsed result:', result);
+            } catch (e) {
+                console.warn('Invalid JSON response from server:', ret);
+                return;
+            }
+
+            let projectList = [];
+            if (result.data) {
+                if (Array.isArray(result.data)) {
+                    projectList = result.data;
+                } else if (result.data.list && Array.isArray(result.data.list)) {
+                    projectList = result.data.list;
+                } else if (typeof result.data === 'object') {
+                    projectList = Object.keys(result.data).map(name => ({ name }));
+                }
+            }
+
+            if (projectList.length === 0) {
+                console.log('No projects found');
+                return;
+            }
+
+            console.log('Project list:', projectList);
+
+            const dialog = document.createElement('div');
+            dialog.style.position = 'fixed';
+            dialog.style.top = '50%';
+            dialog.style.left = '50%';
+            dialog.style.transform = 'translate(-50%, -50%)';
+            dialog.style.backgroundColor = 'white';
+            dialog.style.padding = '20px';
+            dialog.style.borderRadius = '5px';
+            dialog.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            dialog.style.zIndex = '1000';
+
+            const title = document.createElement('h3');
+            title.textContent = translation.mnu_load_from_server_text[this.locale] || 'Load from Server';
+            dialog.appendChild(title);
+
+            const listElement = document.createElement('ul');
+            listElement.style.listStyle = 'none';
+            listElement.style.padding = '0';
+            listElement.style.margin = '10px 0';
+            listElement.style.maxHeight = '300px';
+            listElement.style.overflowY = 'auto';
+
+            projectList.forEach(projectName => {
+                const item = document.createElement('li');
+                item.style.padding = '8px';
+                item.style.cursor = 'pointer';
+                item.style.borderBottom = '1px solid #eee';
+                item.textContent = typeof projectName === 'string' ? projectName : projectName.name;
+                item.onclick = async () => {
+                    const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
+                    if (titleInput) {
+                        titleInput.value = typeof projectName === 'string' ? projectName : projectName.name;
+                    }
+                    await this._apiRead(typeof projectName === 'string' ? projectName : projectName.name);
+                    document.body.removeChild(dialog);
+                };
+                listElement.appendChild(item);
+            });
+
+            dialog.appendChild(listElement);
+
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = translation.mnu_cancel_text[this.locale] || 'Cancel';
+            cancelButton.style.marginTop = '10px';
+            cancelButton.style.padding = '5px 10px';
+            cancelButton.onclick = () => {
+                document.body.removeChild(dialog);
+            };
+            dialog.appendChild(cancelButton);
+
+            document.body.appendChild(dialog);
+
+        } catch (error) {
+            console.error('Error in _apiList:', error);
+            console.error('Error details:', error.stack); // スタックトレースも表示
+        }
+    }
+
+    async _apiRead(projectName) {
+        try {
 
             const ret = await this.sendMessage({
                 type: 'read',
@@ -485,7 +581,7 @@ class Scratch3hackCraft2 {
     getLoadFromServerHandler() {    
         console.log('**** getLoadFromServerHandler');
         return () => {
-            this._apiRead();
+            this._apiList();
         };
     }
 
