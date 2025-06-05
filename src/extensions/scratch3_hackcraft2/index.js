@@ -627,13 +627,6 @@ class Scratch3hackCraft2 {
                 blockIconURI: getIconURI(2, 'normal'),
             },
             {
-                opcode: 'reset',
-                text: translation.reset_text[this.locale],
-                level: 1,
-                blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(1, 'normal'),
-            },
-            {
                 opcode: 'grabItem',
                 text: translation.grabItem_text[this.locale],
                 level: 1,
@@ -942,17 +935,6 @@ class Scratch3hackCraft2 {
                     }
                 }
             },{
-                opcode: 'getHarvest',
-                text: translation.get_harvest_text[this.locale],
-                level: 1,
-                blockType: BlockType.REPORTER,
-                blockIconURI: getIconURI(1, 'normal'),
-                arguments: {
-                    color: {
-                        type: ArgumentType.COLOR,
-                    },
-                }
-            },{
                 opcode: 'blockColor',
                 text: translation.blockColor_text[this.locale],
                 level: 4,
@@ -982,7 +964,7 @@ class Scratch3hackCraft2 {
             {
                 opcode: 'cordinate',
                 text: translation.cordinate_text[this.locale],
-                level: 4,
+                level: 2,
                 blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
@@ -1133,7 +1115,7 @@ class Scratch3hackCraft2 {
             {
                 opcode: 'inspect',
                 text: translation.inspect_text[this.locale],
-                level: 4,
+                level: 2,
                 blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
@@ -1576,12 +1558,15 @@ class Scratch3hackCraft2 {
         }
     }
 
-    onRunStop () {
+    async onRunStop () {
         // 終了処理を実装
-        /*console.log('onRunStop');
-        if(this.connection !== null) {
-            this.connection.close();
-        }*/
+        try {
+            const ret = await this.sendMessage({
+                type: 'finish'
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     connect (args, util) {
@@ -2170,30 +2155,6 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async getHarvest (args, util) {
-        console.log("getHarvest")
-        const spriteId = util.target.sprite.spriteId;
-        try {
-            const ret = await this.sendMessage({
-                type: 'call',
-                data: {
-                    name: 'inspect',
-                    args: [0, 0, 0, "^"]
-                }
-            });
-            const response = JSON.parse(ret);
-            if (response.type === 'result') {
-                const data = JSON.parse(response.data);
-                if(data.data === undefined || data.data == 0) return 0;
-                return data.data;
-            } else {
-                return 0;
-            }  
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
     cordinate (args, util) {
         const spriteId = util.target.sprite.spriteId;
         return [args.X, args.Y, args.Z, args.COORDINATE]
@@ -2303,7 +2264,7 @@ class Scratch3hackCraft2 {
                         args: [0, 1, 1, "^"]
                     }
                     break;
-                case 'FrontUp':
+                case 'FrontDown':
                     data = {
                         name: "digX",
                         args: [0, -1, 1, "^"]
