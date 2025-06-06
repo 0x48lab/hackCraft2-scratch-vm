@@ -57,18 +57,19 @@ class WebSocketClient {
                 }));
             });
 
-            this.ws.addEventListener('message', event => {
+            this.ws.addEventListener('message', event => {                
                 const json = JSON.parse(event.data);
                 if (json.type === 'error') {
                     reject(event);
                 } else if (json.type === 'connected') {
                     this.connected = true;
-                    this.entityUuid = json.data;
+                    this.entity = json.data;
                     resolve(event.data);
                 } else if (json.type === 'event') {
                     const data = JSON.parse(json.data);
                     console.log('event data=', data)
-                    if(data.data.entityUuid == this.entityUuid) {
+                    console.log(data.name, 'entityUuid=', this.entity.entityUuid, data.data.entityUuid)
+                    if(data.data.entityUuid == this.entity.entityUuid) {
                         if(data.name == 'onCustomEvent'){
                             this.eventChanged[data.data.message] = true;
                             this.eventData[data.data.message] = "";    
@@ -81,6 +82,7 @@ class WebSocketClient {
                             this.eventData['onInteractEvent'] = dataEvent;
                         }
                         else{
+                            console.log('onMessage', data.name, data.data)
                             this.eventChanged[data.name] = true;
                             this.eventData[data.name] = data.data;    
                         }

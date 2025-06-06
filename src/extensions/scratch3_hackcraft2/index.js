@@ -8,6 +8,16 @@ const WebSocketClient = require('./websocket_client');
 const formatMessage = require('format-message');
 const {translation, localse} = require('./language');
 
+// format-messageの初期化を追加
+formatMessage.setup({
+    locale: navigator.language || 'en',
+    translations: {
+        'ja-JP': {
+            'gui.hackcraft.modified': '変更済み'
+        }
+    }
+});
+
 // 👇先程作成したアイコン画像
 const menuIconURI = 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxMDEuNjgzMzciIGhlaWdodD0iMTAxLjY4MzM3IiB2aWV3Qm94PSIwLDAsMTAxLjY4MzM3LDEwMS42ODMzNyI+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4OS4xNTgzMSwtMTI5LjE1ODMxKSI+PGcgZGF0YS1wYXBlci1kYXRhPSJ7JnF1b3Q7aXNQYWludGluZ0xheWVyJnF1b3Q7OnRydWV9IiBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIHN0eWxlPSJtaXgtYmxlbmQtbW9kZTogbm9ybWFsIj48cGF0aCBkPSJNMTg5LjQwODMxLDE4MGMwLC0yNy45NDEwMiAyMi42NTA2NywtNTAuNTkxNjkgNTAuNTkxNjksLTUwLjU5MTY5YzI3Ljk0MTAyLDAgNTAuNTkxNjksMjIuNjUwNjcgNTAuNTkxNjksNTAuNTkxNjljMCwyNy45NDEwMiAtMjIuNjUwNjcsNTAuNTkxNjkgLTUwLjU5MTY5LDUwLjU5MTY5Yy0yNy45NDEwMiwwIC01MC41OTE2OSwtMjIuNjUwNjcgLTUwLjU5MTY5LC01MC41OTE2OXoiIGZpbGw9IiM2NWM3NTAiIHN0cm9rZT0iIzAwMDAwMCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48ZyBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iMiI+PHBhdGggZD0iTTIyNS4xODUsMTY1LjA0di04Ljc3aDI5Ljh2OC43N3oiIGZpbGw9IiNmZmZmZmYiLz48cGF0aCBkPSJNMjIxLjM4NSwxNzAuNjF2LTkuOTVoMzcuNHY5Ljk1eiIgZmlsbD0iI2ZmZmZmZiIvPjxwYXRoIGQ9Ik0yMTcuNTQ1LDIwMC4zNXYtMzQuMTZoNDUuMDh2MzQuMTZ6IiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZD0iTTIyMi4xMDUsMjAyLjJ2LTI5LjczaDM1Ljk3djI5LjczeiIgZmlsbD0iI2Q2NmU0ZSIvPjxwYXRoIGQ9Ik0yMDEuNjA1LDIwMy43M3YtMTcuNDhoMTcuNDh2MTcuNDh6IiBmaWxsPSIjZDg2NjRhIi8+PHBhdGggZD0iTTI2MS4wNzUsMjAzLjY1di0xNy4zM2gxNy4zM3YxNy4zM3oiIGZpbGw9IiNkODY2NGEiLz48L2c+PGc+PHBhdGggZD0iTTI1Mi40NjUsMTg2LjMydjEwLjE1aC03LjE5di0xMC4xNXoiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iIzIzMTgxNSIgc3Ryb2tlLXdpZHRoPSIxLjI4Ii8+PHBhdGggZD0iTTI1Mi40NjUsMTg4LjIydjguMjVoLTkuMzV2LTguMjV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yNTIuNDY1LDE4My4yN3Y0Ljk1aC05LjM1di00Ljk1eiIgZmlsbD0iIzk0Yzk2OSIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjQzLjk3NSwxOTUuODJ2LTYuOTZoNC45NXY2Ljk2eiIgZmlsbD0iIzIzMTgxNSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjQ4LjI3NSwxODkuNDZoLTMuNjZ2NS42OGgzLjY2di01LjY0TTI0OS41NjUsMTg4LjE4djguMjVoLTYuMjN2LTguMjVoNi4yMnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PHBhdGggZD0iTTIzNy4wNjUsMTg4LjIydjguMjVoLTkuMzV2LTguMjV6IiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiMyMzE4MTUiIHN0cm9rZS13aWR0aD0iMS4yOCIvPjxwYXRoIGQ9Ik0yMzcuMDY1LDE4My4yN3Y0Ljk1aC05LjM1di00Ljk1eiIgZmlsbD0iIzk0Yzk2OSIgc3Ryb2tlPSIjMjMxODE1IiBzdHJva2Utd2lkdGg9IjEuMjgiLz48cGF0aCBkPSJNMjI4LjU3NSwxOTUuODJ2LTYuOTZoNC45NXY2Ljk2eiIgZmlsbD0iIzIzMTgxNSIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiLz48cGF0aCBkPSJNMjMyLjg3NSwxODkuNDZoLTMuNjZ2NS42OGgzLjY3di01LjY0TTIzNC4xNjUsMTg4LjE4djguMjVoLTYuMjN2LTguMjVoNi4yMnoiIGZpbGw9IiMyMzE4MTUiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9nPjwvZz48L2c+PC9zdmc+';
 const blockRedIconURI = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA3OC43OSA0OS40NiI+PGRlZnM+PHN0eWxlPi5jbHMtMSwuY2xzLTR7ZmlsbDojZmZmO30uY2xzLTEsLmNscy0yLC5jbHMtM3tzdHJva2U6IzAwMDtzdHJva2Utd2lkdGg6MnB4O30uY2xzLTEsLmNscy0yLC5jbHMtMywuY2xzLTQsLmNscy01e3N0cm9rZS1taXRlcmxpbWl0OjEwO30uY2xzLTJ7ZmlsbDojZDY2ZTRlO30uY2xzLTN7ZmlsbDojZDg2NjRhO30uY2xzLTQsLmNscy01e3N0cm9rZTojMjMxODE1O3N0cm9rZS13aWR0aDoxLjI4cHg7fS5jbHMtNXtmaWxsOiM5NGM5Njk7fS5jbHMtNntmaWxsOiMyMzE4MTU7fTwvc3R5bGU+PC9kZWZzPjx0aXRsZT44eDlDcmFmdF9oYWtrdW5fY29sb3I8L3RpdGxlPjxnIGlkPSLjg6zjgqTjg6Tjg7xfMSIgZGF0YS1uYW1lPSLjg6zjgqTjg6Tjg7wgMSI+PHJlY3QgY2xhc3M9ImNscy0xIiB4PSIyNC41OCIgeT0iMSIgd2lkdGg9IjI5LjgiIGhlaWdodD0iOC43NyIvPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMjAuNzgiIHk9IjUuMzkiIHdpZHRoPSIzNy40IiBoZWlnaHQ9IjkuOTUiLz48cmVjdCBjbGFzcz0iY2xzLTEiIHg9IjE2Ljk0IiB5PSIxMC45MiIgd2lkdGg9IjQ1LjA4IiBoZWlnaHQ9IjM0LjE2Ii8+PHJlY3QgY2xhc3M9ImNscy0yIiB4PSIyMS41IiB5PSIxNy4yIiB3aWR0aD0iMzUuOTciIGhlaWdodD0iMjkuNzMiLz48cmVjdCBjbGFzcz0iY2xzLTMiIHg9IjEiIHk9IjMwLjk4IiB3aWR0aD0iMTcuNDgiIGhlaWdodD0iMTcuNDgiLz48cmVjdCBjbGFzcz0iY2xzLTMiIHg9IjYwLjQ3IiB5PSIzMS4wNSIgd2lkdGg9IjE3LjMzIiBoZWlnaHQ9IjE3LjMzIi8+PC9nPjxnIGlkPSLjg6zjgqTjg6Tjg7xfMyIgZGF0YS1uYW1lPSLjg6zjgqTjg6Tjg7wgMyI+PHJlY3QgY2xhc3M9ImNscy00IiB4PSI5OS40NyIgeT0iMjAxLjE4IiB3aWR0aD0iNy4xOSIgaGVpZ2h0PSIxMC4xNSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLjMzIDI0Mi4zOCkgcm90YXRlKDE4MCkiLz48cmVjdCBjbGFzcz0iY2xzLTQiIHg9Ijk3LjMxIiB5PSIyMDMuMDgiIHdpZHRoPSI5LjM1IiBoZWlnaHQ9IjguMjUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE0OS4xNyAyNDQuMjgpIHJvdGF0ZSgxODApIi8+PHJlY3QgY2xhc3M9ImNscy01IiB4PSI5Ny4zMSIgeT0iMTk4LjEzIiB3aWR0aD0iOS4zNSIgaGVpZ2h0PSI0Ljk1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNDkuMTcgMjMxLjA4KSByb3RhdGUoMTgwKSIvPjxyZWN0IGNsYXNzPSJjbHMtNiIgeD0iNDMuMzciIHk9IjMzLjU5IiB3aWR0aD0iNC45NSIgaGVpZ2h0PSI2Ljk2Ii8+PHBhdGggY2xhc3M9ImNscy02IiBkPSJNMTAyLjQ4LDIwNC4zNlYyMTBIOTguODJ2LTUuNjhoMy42Nm0xLjI4LTEuMjhIOTcuNTR2OC4yNWg2LjIzdi04LjI1WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTU0LjgxIC0xNzAuMTMpIi8+PHJlY3QgY2xhc3M9ImNscy00IiB4PSI4MS45MiIgeT0iMjAzLjA4IiB3aWR0aD0iOS4zNSIgaGVpZ2h0PSI4LjI1IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMTguMzggMjQ0LjI4KSByb3RhdGUoMTgwKSIvPjxyZWN0IGNsYXNzPSJjbHMtNSIgeD0iODEuOTIiIHk9IjE5OC4xMyIgd2lkdGg9IjkuMzUiIGhlaWdodD0iNC45NSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTE4LjM4IDIzMS4wOCkgcm90YXRlKDE4MCkiLz48cmVjdCBjbGFzcz0iY2xzLTYiIHg9IjI3Ljk3IiB5PSIzMy41OSIgd2lkdGg9IjQuOTUiIGhlaWdodD0iNi45NiIvPjxwYXRoIGNsYXNzPSJjbHMtNiIgZD0iTTg3LjA5LDIwNC4zNlYyMTBIODMuNDJ2LTUuNjhoMy42Nm0xLjI4LTEuMjhIODIuMTR2OC4yNWg2LjIzdi04LjI1WiIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTU0LjgxIC0xNzAuMTMpIi8+PC9nPjwvc3ZnPg==';
@@ -29,8 +39,14 @@ class Scratch3hackCraft2 {
     
     
     constructor (runtime) {
-        console.log('Scratch3hackCraft2');
         this.runtime = runtime;
+        // Get vm instance from runtime's parent
+        this.vm = runtime.parent || runtime._vm;
+        if (!this.vm) {
+            console.warn('[HACKCRAFT2] VirtualMachine instance not found in runtime');
+        }
+        console.log('Scratch3hackCraft2');
+
         this.locale = this.setLocale();
 
         // 最後のスラッシュを除去したパスを基に、ルート相対の静的パスを生成
@@ -62,7 +78,10 @@ class Scratch3hackCraft2 {
         this.connection = new WebSocketClient(this.host, this.port, this.ssl);
         this.connection.connect(this.player_id, this.entity_id).then(() => {
             // Load project for selected entity.
-            this._apiRead();
+            const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
+            const projectName = titleInput ? titleInput.value : 'default';
+            console.log('**** _apiRead project name from DOM:', projectName);
+            this._apiRead(projectName);
         });
 
         document.title = document.title+" {"+this.entity_name+"}";
@@ -72,27 +91,22 @@ class Scratch3hackCraft2 {
 
     /**
      * @param {string} className className
-     * @param {string} root root
      * @returns {Promise<Element>} Element
      */
-    _waitForUI (className, root) {
-        return new Promise(resolve => {
-            let isDone = false;
-            const check = done => {
-                const element = (root ?? document)
-                    .querySelector(`[class^="${className}"]`);
-                if (element) {
-                    resolve(element);
-                    if (done) done();
-                    isDone = true;
-                }
-            };
-            check();
-            if (isDone) return;
+    _waitForUI (className) {
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                clearInterval(checkInterval);
+                reject(new Error('UI element not found'));
+            }, 5000); // タイムアウトを設定
+
             const checkInterval = setInterval(() => {
-                check(() => {
+                const element = document.querySelector(`[class^="${className}"]`);
+                if (element) {
+                    clearTimeout(timeout);
                     clearInterval(checkInterval);
-                });
+                    resolve(element);
+                }
             }, 100);
         });
     }
@@ -113,33 +127,6 @@ class Scratch3hackCraft2 {
         });
     }
 
-    /**
-     * @param {string} selector selector
-     * @param {string} root root
-     * @returns {Promise<Element>} Element
-     */
-    _waitForSelectorUI (selector, root) {
-        return new Promise(resolve => {
-            let isDone = false;
-            const check = done => {
-                const element = (root ?? document)
-                    .querySelector(selector);
-                if (element) {
-                    resolve(element);
-                    if (done) done();
-                    isDone = true;
-                }
-            };
-            check();
-            if (isDone) return;
-            const checkInterval = setInterval(() => {
-                check(() => {
-                    clearInterval(checkInterval);
-                });
-            }, 100);
-        });
-    }
-
     async _initUI () {
         this.display3D = true;
 
@@ -153,7 +140,6 @@ class Scratch3hackCraft2 {
         this.uiCanvas = this.uiStageWrapper.getElementsByTagName('canvas')[0];
         // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
-        this._addSaveNowMenuItem();
         this._addIsDirtyLabel();
         this._add3dViewToggleButton();
         this._addReloadButton();
@@ -173,35 +159,27 @@ class Scratch3hackCraft2 {
         document.getElementsByTagName('head')[0].appendChild(linkElem);
     }
 
-    async _addSaveNowMenuItem () {
-        const fileMenu = await this._waitForSelectorUI('[class^="menu-bar_menu-bar-item_"]:nth-child(3)', this.uiMenu);
-
-        fileMenu.addEventListener('click', () => {
-            // Wait for JS to add submenu.
-            setTimeout(async () => {
-                const subMenu = await this._waitForUI('menu_menu_', fileMenu);
-                const newMenuItem = await this._waitForSelectorUI('[class^="menu_menu-item_"]', subMenu);
-                if (!this.saveNowMenuItem) {
-                    const saveNowItem = newMenuItem.cloneNode(true);
-                    saveNowItem.querySelector('span').textContent = 'Save now';
-                    saveNowItem.addEventListener('click', () => {
-                        this._saveProject();
-                        this.runtime.emit('HACKCRAFT_CLOSE_FILE_MENU');
-                    });
-                    this.saveNowMenuItem = saveNowItem;
-                }
-                newMenuItem.after(this.saveNowMenuItem);
-                console.log('2', fileMenu, subMenu, newMenuItem, this.saveNowMenuItem);
-            }, 0);
-        });
-    }
-
     _addIsDirtyLabel () {
+        console.log('**** addIsDirtyLabel');
         const otherItem = this.uiMenu.querySelector('[class^="menu-bar_menu-bar-item"]');
         
         const label = document.createElement('span');
         label.className = `${otherItem.className} hackcraft label isDirty`;
-        label.textContent = '* Modified';
+
+        // 翻訳を直接設定
+        label.textContent = translation.mnu_save_text[this.locale];
+        
+        // クリックイベントを追加
+        label.addEventListener('click', () => {
+            if (this.isDirty) {
+                this._saveProject();
+            }
+        });
+        
+        // カーソルをポインターに変更して、クリック可能であることを示す
+        label.style.cursor = 'pointer';
+        
+        console.log('**** addIsDirtyLabel', label.textContent);
 
         this.uiIsDirtyLabel = label;
         this.uiMenu.append(label);
@@ -420,11 +398,16 @@ class Scratch3hackCraft2 {
 
     async _apiSave (code) {
         try {
+            // Get project title from DOM input element
+            const titleInput = document.querySelector('.project-title-input_title-field_en5Gd');
+            const projectName = titleInput ? titleInput.value : 'default';
+            console.log('**** _apiSave project name from DOM:', projectName);
+            
             await this.sendMessage({
                 type: 'save',
                 data: {
                     language: 'scratch',
-                    name: 'default',
+                    name: projectName,
                     entity: this.entity_id,
                     code
                 }
@@ -434,27 +417,137 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async _apiRead () {
+    async _apiList() {
         try {
+            const ret = await this.sendMessage({
+                type: 'list',
+                data: {
+                    language: 'scratch',
+                    entity: this.entity_id,
+                }
+            });
+            console.log('Server response:', ret);
+
+            let result;
+            try {
+                result = JSON.parse(ret);
+                console.log('Parsed result:', result);
+            } catch (e) {
+                console.warn('Invalid JSON response from server:', ret);
+                return;
+            }
+
+            let projectList = [];
+            if (result.data) {
+                if (Array.isArray(result.data)) {
+                    projectList = result.data;
+                } else if (result.data.list && Array.isArray(result.data.list)) {
+                    projectList = result.data.list;
+                } else if (typeof result.data === 'object') {
+                    projectList = Object.keys(result.data).map(name => ({ name }));
+                }
+            }
+
+            if (projectList.length === 0) {
+                console.log('No projects found');
+                return;
+            }
+
+            console.log('Project list:', projectList);
+
+            const dialog = document.createElement('div');
+            dialog.style.position = 'fixed';
+            dialog.style.top = '50%';
+            dialog.style.left = '50%';
+            dialog.style.transform = 'translate(-50%, -50%)';
+            dialog.style.backgroundColor = 'white';
+            dialog.style.padding = '20px';
+            dialog.style.borderRadius = '5px';
+            dialog.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            dialog.style.zIndex = '1000';
+
+            const title = document.createElement('h3');
+            title.textContent = translation.mnu_load_from_server_text[this.locale] || 'Load from Server';
+            dialog.appendChild(title);
+
+            const listElement = document.createElement('ul');
+            listElement.style.listStyle = 'none';
+            listElement.style.padding = '0';
+            listElement.style.margin = '10px 0';
+            listElement.style.maxHeight = '300px';
+            listElement.style.overflowY = 'auto';
+
+            projectList.forEach(projectName => {
+                const item = document.createElement('li');
+                item.style.padding = '8px';
+                item.style.cursor = 'pointer';
+                item.style.borderBottom = '1px solid #eee';
+                item.textContent = projectName;
+                item.onclick = async () => {
+                    await this._apiRead(projectName);
+                    document.body.removeChild(dialog);
+                };
+                listElement.appendChild(item);
+            });
+
+            dialog.appendChild(listElement);
+
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = translation.mnu_cancel_text[this.locale] || 'Cancel';
+            cancelButton.style.marginTop = '10px';
+            cancelButton.style.padding = '5px 10px';
+            cancelButton.onclick = () => {
+                document.body.removeChild(dialog);
+            };
+            dialog.appendChild(cancelButton);
+
+            document.body.appendChild(dialog);
+
+        } catch (error) {
+            console.error('Error in _apiList:', error);
+            console.error('Error details:', error.stack); // スタックトレースも表示
+        }
+    }
+
+    async _apiRead(projectName) {
+        try {
+
             const ret = await this.sendMessage({
                 type: 'read',
                 data: {
-                    entity: this.entity_id,
                     language: 'scratch',
-                    name: 'default'
+                    name: projectName,
+                    entity: this.entity_id,
                 }
             });
-            const result = JSON.parse(ret);
+            let result;
+            try {
+                result = JSON.parse(ret);
+            } catch (e) {
+                console.warn('Invalid JSON response from server:', ret);
+                // サーバーからの応答がJSONでない場合、デフォルトのプロジェクトデータを使用
+                result = {
+                    data: {
+                        code: 'data:application/x.scratch.sb3;base64,UEsDBAoAAAAAAIAwhVYAAAAAAAAAAAAAAAAFAAAAcHJvamVjdC5qc29uUEsBAhQACgAAAAAAgDCFVgAAAAAAAAAAAAAAAAUAAAAAAAAAAAAgAAAAAAAAAHByb2plY3QuanNvblBLBQYAAAAAAQABADYAAAA0AAAAAAA='
+                    }
+                };
+            }
+            if (!result.data || !result.data.code) {
+                throw new Error('Invalid project data format');
+            }
             const blob = this._dataURItoBlob(result.data.code);
-            console.warn('THIS A BLOBB', blob);
-            this._loadProject(blob);
+            console.log('Loading project from blob:', blob);
+            await this._loadProject(blob);
         } catch (error) {
-            console.error(error);
+            console.error('Error in _apiRead:', error);
         }
     }
 
     _saveProject () {
-        this.runtime.emit('HACKCRAFT_GET_PROJECT_BLOB', async blob => {
+        if (!this.vm || typeof this.vm.saveProjectSb3 !== 'function') {
+            throw new Error('VirtualMachineインスタンス(vm)が必要です');
+        }
+        this.vm.saveProjectSb3().then(async blob => {
             const base64 = await this._blobToBase64(blob);
             this._apiSave(base64);
             this.isDirty = false;
@@ -463,32 +556,34 @@ class Scratch3hackCraft2 {
     }
 
     async _loadProject (blob) {
-        const buffer = await blob.arrayBuffer();
-        this.runtime.emit('HACKCRAFT_LOAD_PROJECT_BLOB', buffer);
-        // Race-condition with project change event after load.
+        if (!this.vm || typeof this.vm.loadProject !== 'function') {
+            throw new Error('VirtualMachineインスタンス(vm)が必要です');
+        }
+        const arrayBuffer = await blob.arrayBuffer();
+        await this.vm.loadProject(arrayBuffer);
         setTimeout(() => {
             this.isDirty = false;
             this.uiIsDirtyLabel.classList.remove('show');
         }, 1000);
     }
 
+    getSaveToServerHandler() {
+        console.log('**** getSaveToServerHandler');
+        return () => {
+            this._saveProject();
+        };
+    }
+
+    getLoadFromServerHandler() {    
+        console.log('**** getLoadFromServerHandler');
+        return () => {
+            this._apiList();
+        };
+    }
+
     getBlocks () {
         this.locale = this.setLocale();
         return [
-            /*{
-                opcode: 'setRenderView',
-                text: translation.render_view_text[this.locale],
-                level: 1,
-                blockType: BlockType.COMMAND,
-                blockIconURI: blockBlueIconURI,
-                arguments: {
-                    FLAG: {
-                        type: 'string',
-                        defaultValue: 'on',
-                        menu: 'FLAG_MENU_OPTIONS'
-                    }
-                }
-            },*/
             {
                 opcode: 'onEntityCustomEvent',
                 blockType: BlockType.HAT,
@@ -532,13 +627,6 @@ class Scratch3hackCraft2 {
                 blockIconURI: getIconURI(2, 'normal'),
             },
             {
-                opcode: 'reset',
-                text: translation.reset_text[this.locale],
-                level: 1,
-                blockType: BlockType.COMMAND,
-                blockIconURI: getIconURI(1, 'normal'),
-            },
-            {
                 opcode: 'grabItem',
                 text: translation.grabItem_text[this.locale],
                 level: 1,
@@ -547,7 +635,8 @@ class Scratch3hackCraft2 {
                 arguments: {
                     SLOT: {
                         type: ArgumentType.NUMBER,
-                        defaultValue: 0                    }
+                        defaultValue: 0
+                    }
                 }
             },{
                 opcode: 'passItem',
@@ -591,11 +680,12 @@ class Scratch3hackCraft2 {
                 arguments: {
                     MOVE_MENU: {
                         type: 'string',
-                        defaultValue: 'forward',
+                        defaultValue: 'Front',
                         menu: 'MOVE_MENU_OPTIONS'
                     }
                 }
-            },{
+            },
+            {
                 opcode: 'turn',
                 text: translation.turn_text[this.locale],
                 level: 0,
@@ -845,17 +935,6 @@ class Scratch3hackCraft2 {
                     }
                 }
             },{
-                opcode: 'getHarvest',
-                text: translation.get_harvest_text[this.locale],
-                level: 1,
-                blockType: BlockType.REPORTER,
-                blockIconURI: getIconURI(1, 'normal'),
-                arguments: {
-                    color: {
-                        type: ArgumentType.COLOR,
-                    },
-                }
-            },{
                 opcode: 'blockColor',
                 text: translation.blockColor_text[this.locale],
                 level: 4,
@@ -883,10 +962,10 @@ class Scratch3hackCraft2 {
             
             //高度なブロック
             {
-                opcode: 'teleport',
-                text: translation.teleport_text[this.locale],
-                level: 4,
-                blockType: BlockType.COMMAND,
+                opcode: 'cordinate',
+                text: translation.cordinate_text[this.locale],
+                level: 2,
+                blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
                     COORDINATE: {
@@ -905,6 +984,19 @@ class Scratch3hackCraft2 {
                     Z: {
                         type: ArgumentType.NUMBER,
                         defaultValue: '0'
+                    }
+                }
+            },
+            {
+                opcode: 'teleport',
+                text: translation.teleport_text[this.locale],
+                level: 4,
+                blockType: BlockType.COMMAND,
+                blockIconURI: getIconURI(4, 'normal'),
+                arguments: {
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -914,22 +1006,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -939,22 +1018,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     },
                     SIDE_MENU: {
                         type: 'string',
@@ -969,22 +1035,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -994,22 +1047,9 @@ class Scratch3hackCraft2 {
                 blockType: BlockType.COMMAND,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -1071,54 +1111,30 @@ class Scratch3hackCraft2 {
                         menu: 'BLOCK_INFO_MENU_OPTIONS'
                     }
                 }
-            },{
+            },
+            {
                 opcode: 'inspect',
                 text: translation.inspect_text[this.locale],
-                level: 4,
+                level: 2,
                 blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
-            },{
+            },
+            {
                 opcode: 'distanceTo',
                 text: translation.distanceTo_text[this.locale],
                 level: 4,
                 blockType: BlockType.REPORTER,
                 blockIconURI: getIconURI(4, 'normal'),
                 arguments: {
-                    COORDINATE: {
-                        type: 'string',
-                        defaultValue: '^',
-                        menu: 'COORDINATE_SYSTEM_OPTIONS'
-                    },
-                    X: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Y: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
-                    },
-                    Z: {
-                        type: ArgumentType.NUMBER,
-                        defaultValue: '0'
+                    COORDINATE_BLOCK: {
+                        type: ArgumentType.INPUT,
+                        inputOp: 'cordinate'
                     }
                 }
             },{
@@ -1206,27 +1222,27 @@ class Scratch3hackCraft2 {
                 MOVE_MENU_OPTIONS: [
                     {
                         text: translation.mnu_front_text[this.locale],
-                        value: 'forward'
+                        value: 'Front'
                     },
                     {
                         text: translation.mnu_back_text[this.locale],
-                        value: 'back'
+                        value: 'Back'
                     },
                     {
                         text: translation.mnu_up_text[this.locale],
-                        value: 'up'
+                        value: 'Up'
                     },
                     {
                         text: translation.mnu_down_text[this.locale],
-                        value: 'down'
-                    },
-                    {
-                        text: translation.mnu_right_text[this.locale],
-                        value: 'stepRight'
+                        value: 'Down'
                     },
                     {
                         text: translation.mnu_left_text[this.locale],
-                        value: 'stepLeft'
+                        value: 'StepLeft'
+                    },
+                    {
+                        text: translation.mnu_right_text[this.locale],
+                        value: 'StepRight'
                     }
                 ],
                 TURN_MENU_OPTIONS: [
@@ -1255,6 +1271,14 @@ class Scratch3hackCraft2 {
                     {
                         text: translation.mnu_down_text[this.locale],
                         value: 'Down'
+                    },
+                    {
+                        text: translation.mnu_front_up_text[this.locale],
+                        value: 'FrontUp'
+                    },
+                    {
+                        text: translation.mnu_front_down_text[this.locale],
+                        value: 'FrontDown'
                     }
                 ],
                 SIDE_MENU_OPTIONS: [
@@ -1359,15 +1383,15 @@ class Scratch3hackCraft2 {
                 ],
                 COORDINATE_SYSTEM_OPTIONS: [
                     {
-                        text: '',
+                        text: translation.mnu_world_text[this.locale],
                         value: ''
                     },
                     {
-                        text: '~',
+                        text: translation.mnu_relative_text[this.locale],
                         value: '~'
                     },
                     {
-                        text: '^',
+                        text: translation.mnu_local_text[this.locale],
                         value: '^'
                     }
                 ],
@@ -1534,12 +1558,15 @@ class Scratch3hackCraft2 {
         }
     }
 
-    onRunStop () {
+    async onRunStop () {
         // 終了処理を実装
-        /*console.log('onRunStop');
-        if(this.connection !== null) {
-            this.connection.close();
-        }*/
+        try {
+            const ret = await this.sendMessage({
+                type: 'finish'
+            });
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     connect (args, util) {
@@ -1716,7 +1743,7 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async reset(args, util) {
+    async reset (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
             const ret = await this.sendMessage({
@@ -1730,13 +1757,72 @@ class Scratch3hackCraft2 {
         }
     }
 
+    getDirectionVector (direction) {
+        let x = 0, y = 0, z = 0;
+        switch (direction) {
+            case 'Front':
+                z = 1;
+                break;
+            case 'Back':
+                z = -1;
+                break;
+            case 'Up':
+                y = 1;
+                break;
+            case 'Down':
+                y = -1;
+                break;
+            case 'Left':
+                x = -1;
+                break;
+            case 'Right':
+                x = 1;
+                break;
+            case 'FrontUp':
+                y = 1;
+                z = 1
+                break;
+            case 'FrontDown':
+                y = -1;
+                z = 1
+                break;
+            }
+        return { x, y, z };
+    }
+
     async move (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            let moveCommand;
+            switch (args.MOVE_MENU) {
+                case 'Front':
+                    moveCommand = 'forward';
+                    break;
+                case 'Back':
+                    moveCommand = 'back';
+                    break;
+                case 'Up':
+                    moveCommand = 'up';
+                    break;
+                case 'Down':
+                    moveCommand = 'down';
+                    break;
+                case 'StepLeft':
+                    moveCommand = 'stepLeft';
+                    break;
+                case 'StepRight':
+                    moveCommand = 'stepRight';
+                    break;
+                default:
+                    console.error('Invalid move direction:', args.MOVE_MENU);
+                    return;
+            }
+
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: args.MOVE_MENU
+                    name: moveCommand,
+                    args: [1]
                 }
             });
             const response = JSON.parse(ret);
@@ -1793,11 +1879,12 @@ class Scratch3hackCraft2 {
     async digX (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'digX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -1810,11 +1897,12 @@ class Scratch3hackCraft2 {
     async useItemX (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'useItemX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -1827,15 +1915,16 @@ class Scratch3hackCraft2 {
     async teleport (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'teleport',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
-                    }
+                    args: [x, y, z, coordinate]
+                }
             });
-            //const response = JSON.parse(ret);
-            //if (response.data !== "true") this.printLog(spriteId, 'なにかにぶつかったよ');
+            const response = JSON.parse(ret);
+            if (response.data !== "true") this.printLog(spriteId, 'なにかにぶつかったよ');
         } catch (error) {
             console.error(error);
         }
@@ -1989,12 +2078,13 @@ class Scratch3hackCraft2 {
     async place (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `place${args.DIR_MENU}`,
-                    args: [args.SIDE_MENU]
-                }
+                    name: 'placeX',
+                    args: [x, y, z, "^", args.SIDE_MENU]
+                    }
             });
             const response = JSON.parse(ret);
             if (response.data !== "true") this.printLog(spriteId, 'そこにおけなかったよ');
@@ -2006,11 +2096,12 @@ class Scratch3hackCraft2 {
     async lookAtPosition (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'lookAtPosition',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                     }
             });
             const response = JSON.parse(ret);
@@ -2023,11 +2114,12 @@ class Scratch3hackCraft2 {
     async placeX (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'placeX',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE, args.SIDE_MENU]
+                    args: [x, y, z, coordinate, args.SIDE_MENU]
                     }
             });
             const response = JSON.parse(ret);
@@ -2063,39 +2155,20 @@ class Scratch3hackCraft2 {
         }
     }
 
-    async getHarvest (args, util) {
-        console.log("getHarvest")
+    cordinate (args, util) {
         const spriteId = util.target.sprite.spriteId;
-        try {
-            const ret = await this.sendMessage({
-                type: 'call',
-                data: {
-                    name: 'inspect',
-                    args: [0, 0, 0, "^"]
-                }
-            });
-            const response = JSON.parse(ret);
-            if (response.type === 'result') {
-                const data = JSON.parse(response.data);
-                if(data.data === undefined || data.data == 0) return 0;
-                return data.data;
-            } else {
-                return 0;
-            }  
-        } catch (error) {
-            console.error(error);
-        }
+        return [args.X, args.Y, args.Z, args.COORDINATE]
     }
-
 
     async inspect (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'inspect',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -2114,11 +2187,12 @@ class Scratch3hackCraft2 {
     async distanceTo (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const [x, y, z, coordinate] = args.COORDINATE;
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
                     name: 'distance',
-                    args: [args.X, args.Y, args.Z, args.COORDINATE]
+                    args: [x, y, z, coordinate]
                 }
             });
             const response = JSON.parse(ret);
@@ -2131,10 +2205,12 @@ class Scratch3hackCraft2 {
     async action (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `action${args.DIR_MENU}`
+                    name: `actionX`,
+                    args: [x, y, z, "^"]
                 }
             });
             //const response = JSON.parse(ret);
@@ -2147,10 +2223,12 @@ class Scratch3hackCraft2 {
     async useItem (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `useItem${args.DIR_MENU}`
+                    name: `useItemX`,
+                    args: [x, y, z, "^"]
                 }
             });
             const response = JSON.parse(ret);
@@ -2163,11 +2241,43 @@ class Scratch3hackCraft2 {
     async dig (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            let data;
+            switch (args.DIR_MENU) {
+                case 'Front':
+                    data = {
+                        name: "digFront",
+                    }
+                    break;
+                case 'Up':
+                    data = {
+                        name: "digUp",
+                    }
+                    break;
+                case 'Down':
+                    data = {
+                        name: "digDown",
+                    }
+                    break;
+                case 'FrontUp':
+                    data = {
+                        name: "digX",
+                        args: [0, 1, 1, "^"]
+                    }
+                    break;
+                case 'FrontDown':
+                    data = {
+                        name: "digX",
+                        args: [0, -1, 1, "^"]
+                    }
+                    break;
+                default:
+                    console.error('Invalid move direction:', args.MOVE_MENU);
+                    return;
+            }
+
             const ret = await this.sendMessage({
                 type: 'call',
-                data: {
-                    name: `dig${args.DIR_MENU}`
-                }
+                data: data
             });
             const response = JSON.parse(ret);
             if (response.data !== "true") this.printLog(spriteId, 'それは壊せなかったよ');
@@ -2179,10 +2289,12 @@ class Scratch3hackCraft2 {
     async putToChest (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `putToChest${args.DIR_MENU}`
+                    name: `putToChestX`,
+                    args: [x, y, z, "^"]
                 }
             });
             //const response = JSON.parse(ret);
@@ -2195,10 +2307,12 @@ class Scratch3hackCraft2 {
     async takeFromChest (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            var {x, y, z} = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `takeFromChest${args.DIR_MENU}`
+                    name: `takeFromChestX`,
+                    args: [x, y, z, "^"]
                 }
             });
             //const response = JSON.parse(ret);
@@ -2228,17 +2342,19 @@ class Scratch3hackCraft2 {
     async isBlocked (args, util) {
         const spriteId = util.target.sprite.spriteId;
         try {
+            const { x, y, z } = this.getDirectionVector(args.DIR_MENU);
             const ret = await this.sendMessage({
                 type: 'call',
                 data: {
-                    name: `isBlocked${args.DIR_MENU}`
+                    name: 'isBlockedAt',
+                    args: [x, y, z, "^"]
                 }
             });
             const response = JSON.parse(ret);
-            console.log("isBlocked response=", response.data);
-            return response.data == 'true';
+            return response.data === "true";
         } catch (error) {
             console.error(error);
+            return false;
         }
     }
 
@@ -2276,6 +2392,7 @@ class Scratch3hackCraft2 {
     }
 
     getChatData (args, util) {
+        console.log("getChatData", this.connection.eventData['onPlayerChat'])
         if(!this.connection || !this.connection.eventData || !this.connection.eventData['onPlayerChat']){
             // 適切なエラーメッセージを返すか、または0や空文字を返すなどして処理を終了する
             return ""; // ここは状況に応じて適切な値を返す
