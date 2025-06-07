@@ -73,6 +73,10 @@ class Scratch3hackCraft2 {
         this.ssl = urlParams.get('ssl') === 'true' || false;
         this.level = urlParams.get('level') || 0;
 
+        this.display3D = true;
+        this.isAIEnabled = false;  // Add AI state property
+        this.isGreenFlagPressed = false;  // Add green flag state property
+
         this._initUI();
 
         this.connection = new WebSocketClient(this.host, this.port, this.ssl);
@@ -138,12 +142,12 @@ class Scratch3hackCraft2 {
         this.uiCanvasWrapper.classList.add('hackcraft', 'canvas-wrapper');
         this.uiStageWrapper = await this._waitForUI('stage_stage-wrapper');
         this.uiCanvas = this.uiStageWrapper.getElementsByTagName('canvas')[0];
-        // this.uiControlsWrapper = await this._waitForUI('gui_target-wrapper');
 
         this._addIsDirtyLabel();
         this._add3dViewToggleButton();
         this._addReloadButton();
         this._addPointerEventsButton();
+        this._addAICheckbox();  // Add AI checkbox
         // this._addOpacitySlider();
 
         this._add3dView();
@@ -1547,11 +1551,14 @@ class Scratch3hackCraft2 {
     }
 
     async onStart () {
-        console.log('onStart ');
-
+        this.isGreenFlagPressed = true;  // Set flag to true when green flag is pressed
+        console.log('Green flag pressed:', this.isGreenFlagPressed);
         try {
             const ret = await this.sendMessage({
-                type: 'start'
+                type: 'call',
+                data: {
+                    name: 'onStart'
+                }
             });
         } catch (error) {
             console.error(error);
@@ -1559,10 +1566,14 @@ class Scratch3hackCraft2 {
     }
 
     async onRunStop () {
-        // 終了処理を実装
+        this.isGreenFlagPressed = false;  // Set flag to false when program stops
+        console.log('Program stopped:', this.isGreenFlagPressed);
         try {
             const ret = await this.sendMessage({
-                type: 'finish'
+                type: 'call',
+                data: {
+                    name: 'onRunStop'
+                }
             });
         } catch (error) {
             console.error(error);
@@ -1579,6 +1590,11 @@ class Scratch3hackCraft2 {
     }
 
     async sendMessage(json) {
+        console.log('isAIEnabled', this.isAIEnabled, 'isGreenFlagPressed', this.isGreenFlagPressed)
+        if (this.isAIEnabled && !this.isGreenFlagPressed) {
+            console.log('手動実行オフ')
+            return JSON.stringify({"type":"result","data":"true"});
+        }
         if (this.connection !== null && this.connection !== undefined) {
             try {
                 console.log(json)
@@ -2605,6 +2621,42 @@ class Scratch3hackCraft2 {
 
     selector (type) {
         return type.SELECTOR_BLOCK;
+    }
+
+    _addAICheckbox () {
+        const self = this;
+
+        // Wait for the controls container to be available
+        this._waitForUI('controls_controls-container').then(container => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'hackcraft checkbox-wrapper';
+            wrapper.style.display = 'inline-flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.marginLeft = '8px';
+            
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'hackcraft checkbox';
+            checkbox.checked = this.isAIEnabled;
+            checkbox.style.margin = '0';
+            checkbox.style.marginRight = '4px';
+            
+            const label = document.createElement('label');
+            label.textContent = '手動実行オフ';
+            label.style.cursor = 'pointer';
+            label.style.fontSize = '12px';
+            label.style.color = '#666';
+            
+            checkbox.addEventListener('change', () => {
+                self.isAIEnabled = checkbox.checked;
+            });
+
+            wrapper.appendChild(checkbox);
+            wrapper.appendChild(label);
+            
+            this.uiAICheckbox = checkbox;
+            container.appendChild(wrapper);
+        });
     }
 
 }
